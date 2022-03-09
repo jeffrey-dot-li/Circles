@@ -1,16 +1,16 @@
 import React from 'react';
-import "reflect-metadata";
+import 'reflect-metadata';
 
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, LogBox, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, LogBox, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
+import { NavigationContainer } from '@react-navigation/native';
 import { DatabaseConnectionProvider } from './src/data/connexion';
 import { useProjectFonts } from './src/static/fonts';
 import AppStack from './src/navigators/bubbleStack';
 
 import { store } from './src/store';
-import { NavigationContainer } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -39,7 +39,7 @@ const App = () => {
                   )
                   : (<ActivityIndicator />)
               }
-              
+
             </NavigationContainer>
           </View>
         </SafeAreaProvider>
