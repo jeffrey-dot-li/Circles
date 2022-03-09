@@ -1,6 +1,6 @@
 # Circles
 
-<img width="400" alt="Circles" src="https://user-images.githubusercontent.com/306134/146549218-b7959ad9-0107-4c1c-b439-b96c780f5230.png">
+<img width="300" alt="Circles" src="https://raw.githubusercontent.com/jeffrey-dot-li/Circles/master/assets/splash.png">
 
 ```console
 npm install --global expo-cli
