@@ -1,0 +1,15 @@
+{
+    "extends": "@antfu/react",
+    "rules": {
+      "@typescript-eslint/no-unused-vars": "off",
+      "no-empty-pattern" : "warn",
+      "semi": [
+        "warn",
+        "always"
+      ],
+      "@typescript-eslint/semi": [
+        "warn",
+        "always"
+      ]
+    }
+  }

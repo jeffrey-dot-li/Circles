@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "byCedric.vscode-expo",
+        "ms-vscode.vscode-typescript-next",
+        "chrisbibby.hide-node-modules",
+        "dbaeumer.vscode-eslint"
+
+    ]
+}
