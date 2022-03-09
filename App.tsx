@@ -1,20 +1,57 @@
+import React from 'react';
+import "reflect-metadata";
+
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, LogBox, ActivityIndicator } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
+import { DatabaseConnectionProvider } from './src/data/connexion';
+import { useProjectFonts } from './src/static/fonts';
+import AppStack from './src/navigators/bubbleStack';
+
+import { store } from './src/store';
+import { NavigationContainer } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 
-export default function App() {
+const App = () => {
+  const [loaded, error] = useProjectFonts();
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <DatabaseConnectionProvider>
+      <Provider store={store}>
+
+        <SafeAreaProvider>
+          <View style={styles.container}>
+            <NavigationContainer>
+
+              {
+                loaded
+                  ? (
+                    <>
+                      <StatusBar style="auto" />
+                      <AppStack />
+                    </>
+                  )
+                  : (<ActivityIndicator />)
+              }
+              
+            </NavigationContainer>
+          </View>
+        </SafeAreaProvider>
+      </Provider>
+    </DatabaseConnectionProvider>
   );
 }
+  ;
+
+export default App;
+
+LogBox.ignoreLogs([
+  'Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`',
+  'Setting a timer for a long period of time, i.e. multiple minutes, is a performance and correctness issue on Android as it keeps the timer module awake, and timers can only be called when the app is in the foreground. See https://github.com/facebook/react-native/issues/12981 for more info.',
+]);

@@ -5,3 +5,8 @@
 > Drawin' Circles.  
 
 
+```console
+npm install --global expo-cli
+yarn install
+expo start
+```

@@ -10,6 +10,10 @@
       "@typescript-eslint/semi": [
         "warn",
         "always"
-      ]
+      ],
+      "import/namespace": 0,
+      "no-use-before-define": "off",
+      "@typescript-eslint/no-use-before-define": 0,
+      "eslint-comments/no-unlimited-disable" : 1
     }
   }
