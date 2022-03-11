@@ -179,7 +179,7 @@ const Tabbar = ({ open, onPress = () => null }: TabbarProps) => {
           }}
           onPress={() => {
             open.value = (open.value === 1 ? 0 : 1);
-            onPress();
+            // onPress();
           } }
         >
           <View style={[styles.mainButton, { paddingBottom: insets.bottom }]}>

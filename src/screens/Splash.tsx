@@ -17,6 +17,7 @@ import { BlurView } from 'expo-blur';
 import { Vector, useVector } from 'react-native-redash';
 import { connect } from 'react-redux';
 import type { RouteProp } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { bounceGenerator } from '~/utils/bouncing';
 import Tabbar from '~/components/tabbar/Tabbar';
 import Backdrop from '~/components/tabbar/Backdrop';
@@ -29,6 +30,7 @@ import type { BubbleNavProp, StackParamList } from '~/navigators/bubbleStack';
 import useBubbles, { useCreateCircles, useLoadCircles } from '~/data/hooks/bubbles';
 import { CircleDatas } from '~/static/mockCircles';
 import GradientBackground from '~/components/Bubbles/GradientBackground';
+import FloatingActionButton from '~/components/FloatingActionButton/FloatingActionButton';
 
 const widthAndHeight = Dimensions.get('screen');
 const width = widthAndHeight.width;
@@ -52,17 +54,28 @@ interface OwnProps {
 type StateProps = Pick<bubbles.State, 'circleDatas'>;
 type Props = StateProps & OwnProps;
 
-const BubblesScreen = ({ navigation }: Props) => {
-  const tabbarOpen = useSharedValue(0);
+const FAB_OFFSETS
+= {
+  x: 20,
+  y: 40,
+};
 
+const BubblesScreen = ({ navigation }: Props) => {
   const { activeBubbles } = useBubbles();
   const loadCircles = useLoadCircles();
   const createCircle = useCreateCircles();
   useEffect(() => { loadCircles(); }, []);
+  const tabbarOpen = useSharedValue(0);
+
   const createBubbleCallback = useCallback(async() => {
     const createResult = createCircle();
     setTimeout(async() => tabbarOpen.value === 1 ? navigation.push('BubbleDetails', { id: (await createResult).id }) : null, 300);
   }, [tabbarOpen.value]);
+
+  const insets = useSafeAreaInsets();
+  const onPlusPress = () => {
+    tabbarOpen.value = tabbarOpen.value === 1 ? 0 : 1;
+  };
 
   const globalIsPaused = useDerivedValue(() => tabbarOpen.value === 1);
   return (
@@ -75,7 +88,11 @@ const BubblesScreen = ({ navigation }: Props) => {
       ))}
       <View style={[StyleSheet.absoluteFill, { justifyContent: 'flex-end' }, styles.backdrop]} pointerEvents="box-none">
         <Backdrop open={tabbarOpen} />
-        <Tabbar open={tabbarOpen} onPress={createBubbleCallback} />
+        <View style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: insets.bottom + FAB_OFFSETS.y }}>
+          <FloatingActionButton onPress={onPlusPress} open={tabbarOpen} ></FloatingActionButton>
+        </View>
+
+        {/* <Tabbar open={tabbarOpen} onPress={createBubbleCallback} /> */}
       </View>
 
     </View>

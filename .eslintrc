@@ -1,19 +1,18 @@
 {
-    "extends": "@antfu/react",
-    "rules": {
-      "@typescript-eslint/no-unused-vars": "off",
-      "no-empty-pattern" : "warn",
-      "semi": [
-        "warn",
-        "always"
-      ],
-      "@typescript-eslint/semi": [
-        "warn",
-        "always"
-      ],
-      "import/namespace": 0,
-      "no-use-before-define": "off",
-      "@typescript-eslint/no-use-before-define": 0,
-      "eslint-comments/no-unlimited-disable" : 1
-    }
+  "extends": "@antfu/react",
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "off",
+    "no-empty-pattern": "off",
+    "semi": "off",
+    "@typescript-eslint/semi": [
+      "warn",
+      "always"
+    ],
+    "import/namespace": 0,
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": 0,
+    "eslint-comments/no-unlimited-disable": 1
   }
+}
