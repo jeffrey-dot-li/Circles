@@ -3,11 +3,13 @@ import React from 'react';
 import { Animated, Pressable, StyleSheet, View } from 'react-native';
 import { themeColors } from '~/static/theme';
 import type { FunctionalComponent, ReactProps } from '~/types/utils';
-import { rgba } from '~/utils/color';
+import type { Color } from '~/utils/color';
+import { $toHex, HSLWhite } from '~/utils/color';
 
 interface Props {
 	onPress: () => void
 	size?: number
+	color?: Color
 }
 
 export const FAB_OFFSETS = {
@@ -18,15 +20,16 @@ export const FAB_OFFSETS = {
 export const FAB_SIZE = 64;
 
 const FloatingActionButton: FunctionalComponent<Props>
-	= ({ children, onPress, size = FAB_SIZE }: ReactProps<Props>) => {
-		const styles = StyleSheet.create({
+	= ({ onPress, size = FAB_SIZE, color = HSLWhite, style, children }: ReactProps<Props>) => {
+		const buttonStyles = StyleSheet.create({
 			floatingActionButton: {
+				...style,
 				justifyContent: 'flex-end',
 				alignItems: 'center',
 				width: size,
 				height: size,
 				borderRadius: size / 2,
-				backgroundColor: 'white',
+				backgroundColor: $toHex(color),
 			},
 			iconBox:
 			{
@@ -40,10 +43,10 @@ const FloatingActionButton: FunctionalComponent<Props>
 
 		return (
 			<Pressable
-				style={styles.floatingActionButton}
+				style={ buttonStyles.floatingActionButton }
 				onPress={onPress}
 			>
-				<View style={[styles.iconBox]}>
+				<View style={[buttonStyles.iconBox]}>
 					{children}
 				</View>
 			</Pressable>

@@ -48,7 +48,7 @@ const AddBubbleButton: FunctionalComponent<Props> = ({ startOpen, style }: React
 
 	const buttonAnimation = useAnimatedStyle(() => ({
 		transform: [
-			{ translateY: -mix(openWithSpring.value, 0, FAB_SIZE + FAB_OFFSETS.y) },
+			{ translateY: -mix(openWithSpring.value, 0, FAB_SIZE + 20) },
 		],
 	}), [openWithSpring.value]);
 	return (

@@ -2,13 +2,6 @@ import 'react-native-reanimated';
 import convert from 'color-convert';
 export type HSLColor = `hsl(${number}, ${number}%, ${number}%)`;
 
-const SC
-= {
-	h: 360,
-	s: 100,
-	l: 100,
-	a: 1,
-} as const;
 export interface Color {
 	h: number
 	s: number
@@ -16,6 +9,14 @@ export interface Color {
 	ratio: boolean
 	a: number
 }
+export const HSLWhite: Color
+= {
+	h: 360,
+	s: 100,
+	l: 100,
+	a: 1,
+	ratio: false,
+} as const;
 
 const HSLToRGB = (h: number, s_: number, l_: number) => {
 	'worklet';
@@ -62,12 +63,12 @@ const color = (h: number, s: number, l: number, a = 1, ratio = false): Color => 
 
 export const RatioToAbs = ({ ratio, h, s, l, a }: Color) => {
 	'worklet';
-	return ratio ? workletColor(h * SC.h, s * SC.s, l * SC.l, a, false) : workletColor(h, s, l, a, false);
+	return ratio ? workletColor(h * HSLWhite.h, s * HSLWhite.s, l * HSLWhite.l, a, false) : workletColor(h, s, l, a, false);
 };
 
 export const AbsToRatio = ({ ratio, h, s, l, a }: Color) => {
 	'worklet';
-	return ratio ? workletColor(h, s, l, a, true) : workletColor(h / SC.h, s / SC.s, l / SC.l, a, true);
+	return ratio ? workletColor(h, s, l, a, true) : workletColor(h / HSLWhite.h, s / HSLWhite.s, l / HSLWhite.l, a, true);
 };
 
 export const rgba = (c_: Color) => {
@@ -92,6 +93,7 @@ export const fromHex = (c: string) => {
 export const toHex = (c: Color) => {
 	return convert.hsl.hex([c.h, c.s, c.l]);
 };
+export const $toHex = (c: Color) => `#${toHex(c)}`;
 
 export const HSLFromString = (hslString: HSLColor) => {
 	const ex = /^hsl\(((((([12]?[1-9]?\d)|[12]0\d|(3[0-5]\d))(\.\d+)?)|(\.\d+))(deg)?|(0|0?\.\d+)turn|(([0-6](\.\d+)?)|(\.\d+))rad)((,\s?(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2}|(\s(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2})\)$/i;

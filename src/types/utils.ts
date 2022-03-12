@@ -2,7 +2,7 @@ import type React from 'react';
 import type { PropsWithChildren } from 'react';
 import type { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native';
 
-export type PropsWithStyle<P = {}, S = ViewStyle> = P & { style?: StyleProp<S> };
+export type PropsWithStyle<P = {}, S = ViewStyle> = P & { style?: S };
 export type FunctionalComponent<P = {}, S = ViewStyle>
   = React.FunctionComponent<ReactProps<P, S>>;
 

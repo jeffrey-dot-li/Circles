@@ -13,15 +13,18 @@ interface Props {
 }
 
 const BubbleCreate: React.FC<Props> = ({ }: Props) => {
-	const saveBubble = () => {};
+	const saveBubble = () => { };
 
 	return (
 		<View style={styles.container}>
 			<AddBubbleButton startOpen={true}
 				style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}
 			/>
-			<FloatingActionButton onPress={saveBubble} >
-				<Feather name="x" color={rgba(themeColors.blossom[100])} size={FAB_SIZE / 2} />
+			<FloatingActionButton onPress={saveBubble}
+				style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}
+				color={themeColors.evergreen[65]}
+			>
+				<Feather name="check" color={'white'} size={FAB_SIZE / 2} />
 			</FloatingActionButton>
 		</View>
 
