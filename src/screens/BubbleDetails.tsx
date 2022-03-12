@@ -7,7 +7,6 @@ import { LavaLamp } from '~/components/Bubbles/LavaLamp';
 import FontStyles from '~/static/fonts';
 import ColorSelect from '~/components/Bubbles/ColorSelect';
 import { themeColors } from '~/static/theme';
-import { actions, types } from '~/store';
 import type { BubbleNavProp, StackParamList } from '~/navigators/bubbleStack';
 import { useAppSelector } from '~/store/types';
 import AppBar, { TitleTextInput } from '~/components/AppBar';
@@ -32,11 +31,11 @@ const BubbleDetails = ({ navigation, route: { params: { id } } }: Props) => {
   const [title, setTitle] = useState(circleData?.title);
   const [content, setContent] = useState(circleData?.content);
 
-  const SaveBubble = useCallback(() => circleData ? updateCircle({ title, content }, id) : null, [title, content, id, circleData]);
+  const SaveBubble = useCallback(() => circleData ? updateCircle({ title, content }, id) : null, [updateCircle, title, content, id, circleData]);
   useEffect(() => {
     navigation.addListener('beforeRemove', SaveBubble);
     return () => navigation.removeListener('beforeRemove', SaveBubble);
-  }, [navigation]);
+  }, [navigation, SaveBubble]);
 
   const SaveBubbleAppState = useCallback((s: AppStateStatus) => {
     return s !== 'active' ? SaveBubble() : undefined;
