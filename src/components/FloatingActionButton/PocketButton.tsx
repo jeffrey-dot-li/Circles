@@ -64,7 +64,7 @@ const PocketButton: React.FC<Props> = ({ start }: Props) => {
     transform: [{ rotate: `${mix(openWithSpring.value, Math.PI / 4, 0)}rad` }],
   }));
   return (
-    <SharedElement id={'pocket-button'} style={{ position: 'absolute', left: FAB_OFFSETS.x, bottom: insets.bottom + FAB_OFFSETS.y }}>
+    <SharedElement id={'pocket-button'} style={{ position: 'absolute', left: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}>
 
       <Pressable
         style={{
