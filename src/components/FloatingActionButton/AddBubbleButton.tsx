@@ -66,7 +66,7 @@ const FloatingActionButton: React.FC<Props> = ({ start }: Props) => {
     transform: [{ rotate: `${mix(openWithSpring.value, Math.PI / 4, 0)}rad` }],
   }));
   return (
-    <SharedElement id={'plus-button'} style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: insets.bottom + FAB_OFFSETS.y }}>
+    <SharedElement id={'plus-button'} style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}>
 
       <Pressable
         style={{
