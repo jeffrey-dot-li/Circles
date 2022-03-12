@@ -1,9 +1,10 @@
 {
     "recommendations": [
-        "byCedric.vscode-expo",
+        "bycedric.vscode-expo",
         "ms-vscode.vscode-typescript-next",
         "chrisbibby.hide-node-modules",
-        "dbaeumer.vscode-eslint"
-
+        "dbaeumer.vscode-eslint",
+        "naumovs.color-highlight",
+        "bierner.color-info"
     ]
 }

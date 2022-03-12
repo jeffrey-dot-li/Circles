@@ -31,7 +31,8 @@ import type { BubbleNavProp, StackParamList } from '~/navigators/bubbleStack';
 import useBubbles, { useCreateCircles, useLoadCircles } from '~/data/hooks/bubbles';
 import { CircleDatas } from '~/static/mockCircles';
 import GradientBackground from '~/components/Bubbles/GradientBackground';
-import FloatingActionButton from '~/components/FloatingActionButton/FloatingActionButton';
+import AddBubbleButton from '~/components/FloatingActionButton/AddBubbleButton';
+import PocketButton from '~/components/FloatingActionButton/PocketButton';
 
 const widthAndHeight = Dimensions.get('screen');
 const width = widthAndHeight.width;
@@ -78,7 +79,8 @@ const BubblesScreen = ({ navigation, route }: Props) => {
       ))}
       <View style={[StyleSheet.absoluteFill, { justifyContent: 'flex-end' }, styles.backdrop]} pointerEvents="box-none">
         <Backdrop open={tabbarOpen} />
-        <FloatingActionButton start={0}/>
+        <AddBubbleButton start={0}/>
+        <PocketButton start={0}/>
 
         {/* <Tabbar open={tabbarOpen} onPress={createBubbleCallback} /> */}
       </View>

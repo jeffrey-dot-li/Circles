@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withSpring } from 'react-native-reanimated';
 import { mix } from 'react-native-redash';
@@ -11,8 +11,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { themeColors } from '~/static/theme';
 import { rgba, toHex } from '~/utils/color';
 import type { BubbleNavProp, StackParamList } from '~/navigators/bubbleStack';
-
-const COLOR = themeColors.Iris;
 
 interface Props {
   start: number
@@ -38,11 +36,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const FloatingActionButton: React.FC<Props> = ({ start }: Props) => {
+const PocketButton: React.FC<Props> = ({ start }: Props) => {
   const insets = useSafeAreaInsets();
 
   const navigation = useNavigation<BubbleNavProp<'Home'>>();
-  const route = useRoute<RouteProp<StackParamList, 'Home' | 'BubbleCreate'>>();
+  const route = useRoute<RouteProp<StackParamList, 'Home' | 'PocketScreen'>>();
   const open = useSharedValue(start);
   const callback = () => {
     'worklet';
@@ -52,7 +50,7 @@ const FloatingActionButton: React.FC<Props> = ({ start }: Props) => {
 
   const onPress = () => {
     open.value = route.name === 'Home' ? 1 : 0;
-    navigation.navigate(route.name === 'Home' ? 'BubbleCreate' : 'Home');
+    navigation.navigate(route.name === 'Home' ? 'PocketScreen' : 'Home');
   };
   const openWithSpring = useDerivedValue(() => withSpring(open.value, {
     overshootClamping: true,
@@ -66,7 +64,7 @@ const FloatingActionButton: React.FC<Props> = ({ start }: Props) => {
     transform: [{ rotate: `${mix(openWithSpring.value, Math.PI / 4, 0)}rad` }],
   }));
   return (
-    <SharedElement id={'plus-button'} style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: insets.bottom + FAB_OFFSETS.y }}>
+    <SharedElement id={'pocket-button'} style={{ position: 'absolute', left: FAB_OFFSETS.x, bottom: insets.bottom + FAB_OFFSETS.y }}>
 
       <Pressable
         style={{
@@ -79,8 +77,8 @@ const FloatingActionButton: React.FC<Props> = ({ start }: Props) => {
       >
         <View style={[styles.mainButton]}>
           <Animated.View style={styles.icon}>
-            <Animated.View style={icon}>
-              <Icon name="x" color={rgba(COLOR)} size={SIZE / 2} />
+            <Animated.View>
+              <Icon name="shopping-bag" color={rgba(themeColors.Autumn)} size={SIZE / 2} />
             </Animated.View>
           </Animated.View>
         </View>
@@ -89,4 +87,4 @@ const FloatingActionButton: React.FC<Props> = ({ start }: Props) => {
   );
 };
 
-export default FloatingActionButton;
+export default PocketButton;

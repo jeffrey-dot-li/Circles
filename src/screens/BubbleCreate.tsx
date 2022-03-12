@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { SharedElement } from 'react-navigation-shared-element';
-import FloatingActionButton from '~/components/FloatingActionButton/FloatingActionButton';
+import FloatingActionButton from '~/components/FloatingActionButton/AddBubbleButton';
 
 const { height, width, fontScale, scale } = Dimensions.get('screen');
 
