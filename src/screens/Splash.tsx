@@ -18,6 +18,7 @@ import { Vector, useVector } from 'react-native-redash';
 import { connect } from 'react-redux';
 import type { RouteProp } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SharedElement } from 'react-navigation-shared-element';
 import { bounceGenerator } from '~/utils/bouncing';
 import Tabbar from '~/components/tabbar/Tabbar';
 import Backdrop from '~/components/tabbar/Backdrop';
@@ -45,22 +46,16 @@ interface NoteItem {
 // const bounceX = bounceGenerator(0, width);
 // const bounceY = bounceGenerator(0, height);
 
-type ItemDetailsRouteProp = RouteProp<StackParamList, 'Bubble'>;
-interface OwnProps {
-  navigation: BubbleNavProp<'Bubble'>
+type ItemDetailsRouteProp = RouteProp<StackParamList, 'Home'>;
+interface NavigationProps {
+  navigation: BubbleNavProp<'Home'>
   route: ItemDetailsRouteProp
 }
 
 type StateProps = Pick<bubbles.State, 'circleDatas'>;
-type Props = StateProps & OwnProps;
+type Props = StateProps & NavigationProps;
 
-const FAB_OFFSETS
-= {
-  x: 20,
-  y: 40,
-};
-
-const BubblesScreen = ({ navigation }: Props) => {
+const BubblesScreen = ({ navigation, route }: Props) => {
   const { activeBubbles } = useBubbles();
   const loadCircles = useLoadCircles();
   const createCircle = useCreateCircles();
@@ -71,11 +66,6 @@ const BubblesScreen = ({ navigation }: Props) => {
     const createResult = createCircle();
     setTimeout(async() => tabbarOpen.value === 1 ? navigation.push('BubbleDetails', { id: (await createResult).id }) : null, 300);
   }, [tabbarOpen.value]);
-
-  const insets = useSafeAreaInsets();
-  const onPlusPress = () => {
-    tabbarOpen.value = tabbarOpen.value === 1 ? 0 : 1;
-  };
 
   const globalIsPaused = useDerivedValue(() => tabbarOpen.value === 1);
   return (
@@ -88,9 +78,7 @@ const BubblesScreen = ({ navigation }: Props) => {
       ))}
       <View style={[StyleSheet.absoluteFill, { justifyContent: 'flex-end' }, styles.backdrop]} pointerEvents="box-none">
         <Backdrop open={tabbarOpen} />
-        <View style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: insets.bottom + FAB_OFFSETS.y }}>
-          <FloatingActionButton onPress={onPlusPress} open={tabbarOpen} ></FloatingActionButton>
-        </View>
+        <FloatingActionButton start={0}/>
 
         {/* <Tabbar open={tabbarOpen} onPress={createBubbleCallback} /> */}
       </View>
