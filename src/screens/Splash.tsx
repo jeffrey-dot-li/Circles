@@ -75,14 +75,13 @@ const BubblesScreen = ({ navigation, route }: Props) => {
         <LavaLamp />
       </GradientBackground>
       {activeBubbles.map(([id, item]) => (
-        <Bubble circleData={item} key={id} globalIsPaused={globalIsPaused} onPress={() => navigation.push('BubbleDetails', { id })} />
+        <Bubble circleData={item} key={id} id={id} globalIsPaused={globalIsPaused} onPress={() => navigation.push('BubbleDetails', { id })} />
       ))}
       <View style={[StyleSheet.absoluteFill, { justifyContent: 'flex-end' }, styles.backdrop]} pointerEvents="box-none">
         <Backdrop open={tabbarOpen} />
         <AddBubbleButton start={0}/>
         <PocketButton start={0}/>
 
-        {/* <Tabbar open={tabbarOpen} onPress={createBubbleCallback} /> */}
       </View>
 
     </View>

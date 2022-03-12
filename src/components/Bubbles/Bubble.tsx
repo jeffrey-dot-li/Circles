@@ -1,17 +1,19 @@
 import React, { useEffect } from 'react';
 import type { GestureResponderEvent } from 'react-native';
 import { Dimensions, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useDerivedValue, useSharedValue } from 'react-native-reanimated';
+import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useDerivedValue, useSharedValue } from 'react-native-reanimated';
 import type { Vector } from 'react-native-redash';
-import { animationParameter, withPause } from 'react-native-redash';
 import { useVector } from 'react-native-redash/src/Vectors';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import { Gesture, GestureDetector, PanGestureHandler } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 import type { CircleData } from '../../types/Circles';
 import type { PropsWithStyle } from '../../types/utils';
 import { withBouncing } from '../../utils/bouncing';
 import { rgba } from '~/utils/color';
 import FontStyles from '~/static/fonts';
+
 import GlobalStyles from '~/static/styles';
+import type { BubbleNavProp } from '~/navigators/bubbleStack';
 
 const useCopyVector = (v: Vector) => useVector(v.x, v.y);
 
@@ -48,15 +50,17 @@ const styles = StyleSheet.create({
 
 interface Props {
   circleData: CircleData
+  id: string
   globalIsPaused: Readonly<Animated.SharedValue<boolean>>
-  onPress?: (_: GestureResponderEvent) => void
+  onPress?: () => void
 }
 
 const widthAndHeight = Dimensions.get('screen');
 const width = widthAndHeight.width;
 const height = widthAndHeight.height;
 
-export const Bubble = ({ circleData: { radius, color, position, velocity, ...note }, globalIsPaused, style, onPress = () => null }: PropsWithStyle<Props>) => {
+export const Bubble = ({ circleData: { radius, color, position, velocity, ...note }, globalIsPaused, style, id }: PropsWithStyle<Props>) => {
+  const navigation = useNavigation<BubbleNavProp<'Home'>>();
   const selfIsPaused = useSharedValue(false);
   const masterIsPaused = useDerivedValue(() => selfIsPaused.value || globalIsPaused.value, [selfIsPaused.value, globalIsPaused.value]);
 
@@ -78,6 +82,35 @@ export const Bubble = ({ circleData: { radius, color, position, velocity, ...not
     };
   });
 
+  const wrapper = () => navigation.navigate('BubbleDetails', { id });
+  const tap = Gesture.Tap().onEnd(() => {
+    runOnJS(wrapper)();
+  });
+
+  const pan = Gesture.Pan()
+    .onStart(() => {
+      'worklet';
+      startPosition.x.value = animatedPos.x.value;
+      startPosition.y.value = animatedPos.y.value;
+      selfIsPaused.value = true;
+    }).onChange(({ translationX, translationY }) => {
+      'worklet';
+
+      animatedPos.x.value = translationX + startPosition.x.value;
+      animatedPos.y.value = translationY + startPosition.y.value;
+    }).onEnd(({ velocityX, velocityY }) => {
+      'worklet';
+
+      animatedVel.x.value = velocityX / 200;
+      animatedVel.y.value = velocityY / 200;
+    }).onFinalize(() => {
+      'worklet';
+
+      selfIsPaused.value = false;
+      animatedPos.x.value = (withBouncing(animatedPos.x.value, animatedVel.x.value, radius, width - radius));
+      animatedPos.y.value = (withBouncing(animatedPos.y.value, animatedVel.y.value, radius, height - radius));
+    });
+
   const onSwipeEvent = useAnimatedGestureHandler({
     onStart() {
       'worklet';
@@ -87,23 +120,29 @@ export const Bubble = ({ circleData: { radius, color, position, velocity, ...not
       selfIsPaused.value = true;
     },
     onActive({ translationX, translationY }) {
+      'worklet';
+
       animatedPos.x.value = translationX + startPosition.x.value;
       animatedPos.y.value = translationY + startPosition.y.value;
     },
     onEnd({ velocityX, velocityY }) {
+      'worklet';
+
       animatedVel.x.value = velocityX / 200;
       animatedVel.y.value = velocityY / 200;
     },
     onFinish() {
+      'worklet';
+
       selfIsPaused.value = false;
       animatedPos.x.value = (withBouncing(animatedPos.x.value, animatedVel.x.value, radius, width - radius));
       animatedPos.y.value = (withBouncing(animatedPos.y.value, animatedVel.y.value, radius, height - radius));
     },
   });
+
+  const gesture = Gesture.Race(pan, tap);
   return (
-    <PanGestureHandler
-      onGestureEvent={onSwipeEvent}
-    >
+    <GestureDetector gesture={gesture}>
       <Animated.View
         style={[
           { position: 'absolute' },
@@ -117,12 +156,11 @@ export const Bubble = ({ circleData: { radius, color, position, velocity, ...not
             { width: radius, height: radius, borderRadius: radius },
             { backgroundColor: rgba(color) },
           ]}
-          onPress={onPress}
         >
           <Text style={[styles.title, FontStyles.textBanner, { maxWidth: radius * 0.75 }]} numberOfLines={1}>{note.title}</Text>
           <Text style={[styles.content, FontStyles.textContent, { maxWidth: radius * 0.8 }]} numberOfLines={3}>{note.content}</Text>
         </TouchableOpacity>
       </Animated.View>
-    </PanGestureHandler>
+    </GestureDetector>
   );
 };
