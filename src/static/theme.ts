@@ -13,4 +13,4 @@ export const themeColors = MapEntries(condensedThemeHSL)(hsl => MapEntries(hsl)(
 // } as const;
 
 export const getRandomColor = (seed = 0) =>
-	Object.values(themeColors)[Math.floor((seed ? (seed % 1) : Math.random()) * Object.values(themeColors).length)]!;
+	Object.values(themeColors)[Math.floor((seed ? (seed % 1) : Math.random()) * Object.values(themeColors).length)]![100];

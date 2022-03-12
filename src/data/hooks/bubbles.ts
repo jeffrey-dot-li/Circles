@@ -11,93 +11,93 @@ import { fromHex } from '~/utils/color';
 import { getRandomColor } from '~/static/theme';
 type CreateCircleData = Omit<CircleData, 'popped' | 'position' | 'velocity'>;
 export const DefaultCreateCircleData = (): CreateCircleData => {
-  const r = Math.random();
-  return ({
-    content: '',
-    title: '',
-    radius: 80 + 100 * r,
-    color: getRandomColor(r),
-  });
+	const r = Math.random();
+	return ({
+		content: '',
+		title: '',
+		radius: 80 + 100 * r,
+		color: getRandomColor(r),
+	});
 };
 
 const generateCircleData = (c: CreateCircleData): CircleData =>
-  ({
-    ...c,
-    popped: false,
-    // Todo: Generate initial position and velocity
-    position: Vec(0, 0),
-    velocity: GenerateVelocity(),
-  });
+	({
+		...c,
+		popped: false,
+		// Todo: Generate initial position and velocity
+		position: Vec(0, 0),
+		velocity: GenerateVelocity(),
+	});
 
 export function useCreateCircles() {
-  const { notesRepository } = useDatabaseConnection();
-  const dispatch = useAppDispatch();
-  const createCircle = useCallback(async(c: CreateCircleData | null = null) => {
-    const generateCircle = generateCircleData(c || DefaultCreateCircleData());
-    const note = await notesRepository.create(generateCircle);
-    dispatch({
-      type: AddBubble,
-      circleData: SchemaToData(note),
-    });
-    return note;
-  }, [notesRepository]);
-  return createCircle;
+	const { notesRepository } = useDatabaseConnection();
+	const dispatch = useAppDispatch();
+	const createCircle = useCallback(async(c: CreateCircleData | null = null) => {
+		const generateCircle = generateCircleData(c || DefaultCreateCircleData());
+		const note = await notesRepository.create(generateCircle);
+		dispatch({
+			type: AddBubble,
+			circleData: SchemaToData(note),
+		});
+		return note;
+	}, [notesRepository]);
+	return createCircle;
 }
 
 export function useDeleteCircle() {
-  const { notesRepository } = useDatabaseConnection();
-  const dispatch = useAppDispatch();
-  const deleteCircle = useCallback(async(id: string) => {
-    const result = notesRepository.delete(id);
-    await result;
-    return dispatch({
-      type: DeleteBubble,
-      id,
-    });
-  }, [notesRepository]);
-  return deleteCircle;
+	const { notesRepository } = useDatabaseConnection();
+	const dispatch = useAppDispatch();
+	const deleteCircle = useCallback(async(id: string) => {
+		const result = notesRepository.delete(id);
+		await result;
+		return dispatch({
+			type: DeleteBubble,
+			id,
+		});
+	}, [notesRepository]);
+	return deleteCircle;
 }
 
 export function useUpdateCircle() {
-  const { notesRepository } = useDatabaseConnection();
-  const dispatch = useAppDispatch();
-  const updateCircle = useCallback(async(c: PartialCircle, id: string) => {
-    const result = await notesRepository.update(c, id);
-    // TODO: Handle Error
-    if (result.error)
-      return;
-    return dispatch({
-      type: UpdateBubble,
-      circleData: SchemaToDataPartial(result.result),
-      id: result.result.id,
-    });
-  }, [notesRepository]);
-  return updateCircle;
+	const { notesRepository } = useDatabaseConnection();
+	const dispatch = useAppDispatch();
+	const updateCircle = useCallback(async(c: PartialCircle, id: string) => {
+		const result = await notesRepository.update(c, id);
+		// TODO: Handle Error
+		if (result.error)
+			return;
+		return dispatch({
+			type: UpdateBubble,
+			circleData: SchemaToDataPartial(result.result),
+			id: result.result.id,
+		});
+	}, [notesRepository]);
+	return updateCircle;
 }
 
 export function useLoadCircles() {
-  const { notesRepository } = useDatabaseConnection();
-  const bubblesState = useAppSelector(s => s.bubbles);
-  const dispatch = useAppDispatch();
-  const loadNotesFromDatabase = useCallback(async(force?: boolean) => {
-    if (!bubblesState.databaseFetched || force) {
-      dispatch({
-        type: DatabaseFetchedAction,
-      });
-      const circleDatas: SavedCircleData[] = (await notesRepository.getAll()).map(SchemaToData);
-      dispatch({
-        type: SetBubbles,
-        circleDatas,
-      });
-    }
-  }, [notesRepository]);
-  return loadNotesFromDatabase;
+	const { notesRepository } = useDatabaseConnection();
+	const bubblesState = useAppSelector(s => s.bubbles);
+	const dispatch = useAppDispatch();
+	const loadNotesFromDatabase = useCallback(async(force?: boolean) => {
+		if (!bubblesState.databaseFetched || force) {
+			dispatch({
+				type: DatabaseFetchedAction,
+			});
+			const circleDatas: SavedCircleData[] = (await notesRepository.getAll()).map(SchemaToData);
+			dispatch({
+				type: SetBubbles,
+				circleDatas,
+			});
+		}
+	}, [notesRepository]);
+	return loadNotesFromDatabase;
 }
 
 export default function useBubbles() {
-  const bubblesState = useAppSelector(s => s.bubbles);
-  const activeBubbles = useMemo(() =>
-    TypedEntries(bubblesState.circleDatas).filter(([, v]) => !v.popped), [bubblesState.circleDatas]);
+	const bubblesState = useAppSelector(s => s.bubbles);
+	const activeBubbles = useMemo(() =>
+		TypedEntries(bubblesState.circleDatas).filter(([, v]) => !v.popped), [bubblesState.circleDatas]);
 
-  return { ...bubblesState, activeBubbles };
+	return { ...bubblesState, activeBubbles };
 }

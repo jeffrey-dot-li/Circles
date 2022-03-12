@@ -15,9 +15,10 @@ import type { FunctionalComponent, ReactProps } from '~/types/utils';
 
 interface Props {
 	startOpen: boolean
+	onPress?: () => void
 }
 
-const AddBubbleButton: FunctionalComponent<Props> = ({ startOpen, style }: ReactProps<Props>) => {
+const AddBubbleButton: FunctionalComponent<Props> = ({ startOpen, style, onPress = () => null }: ReactProps<Props>) => {
 	const navigation = useNavigation<BubbleNavProp<'Home'>>();
 	const route = useRoute<RouteProp<StackParamList, 'Home' | 'BubbleCreate'>>();
 	const open = useSharedValue(Number(startOpen));
@@ -27,9 +28,10 @@ const AddBubbleButton: FunctionalComponent<Props> = ({ startOpen, style }: React
 			open.value = Number(startOpen);
 	};
 
-	const onPress = () => {
+	const buttonPress = () => {
 		open.value = route.name === 'Home' ? 1 : 0;
 		navigation.navigate(route.name === 'Home' ? 'BubbleCreate' : 'Home');
+		onPress();
 	};
 	const openWithSpring = useDerivedValue(() => withSpring(open.value, {
 		overshootClamping: true,
@@ -56,7 +58,7 @@ const AddBubbleButton: FunctionalComponent<Props> = ({ startOpen, style }: React
 			<Animated.View style={buttonAnimation} >
 				<SharedElement id={'plus-button'} >
 					{/* Can't have Animated.View as the first node inside SharedElement or get 'Object not extendible' error. */}
-					<FloatingActionButton onPress={onPress} >
+					<FloatingActionButton onPress={buttonPress} >
 						<Animated.View style={iconAnimation} >
 							<Icon name="x" color={rgba(themeColors.blossom[100])} size={FAB_SIZE / 2} />
 						</Animated.View>
