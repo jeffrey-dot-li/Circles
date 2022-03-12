@@ -17,14 +17,14 @@ import PocketScreen from '~/screens/Pocket';
 // import BubbleDetails from '~/screens/BubbleDetails';
 
 export interface StackParamList extends ParamListBase {
-  Home: undefined
-  BubbleDetails:
-  {
-    id: string
-  }
-  BubbleCreate: undefined
-  PocketScreen: undefined
-  SettingsScreen: undefined
+	Home: undefined
+	BubbleDetails:
+	{
+		id: string
+	}
+	BubbleCreate: undefined
+	PocketScreen: undefined
+	SettingsScreen: undefined
 }
 
 export type BubbleNavProp<T extends keyof StackParamList> =
@@ -36,22 +36,22 @@ type Props = StateProps;
 const Snack = createSharedElementStackNavigator<StackParamList>();
 
 const BubbleStack = (_: Props) => (
-  <Snack.Navigator screenOptions={{
-    headerShown: false,
-    presentation: 'modal',
-    cardOverlayEnabled: true,
-    gestureEnabled: true,
-  }} initialRouteName="Home"
-  >
-    <Snack.Screen component={BubbleScreen} name="Home"></Snack.Screen>
+	<Snack.Navigator screenOptions={{
+		headerShown: false,
+		presentation: 'modal',
+		cardOverlayEnabled: true,
+		gestureEnabled: true,
+	}} initialRouteName="Home"
+	>
+		<Snack.Screen component={BubbleScreen} name="Home"></Snack.Screen>
 
-    <Snack.Screen component={PocketScreen} name="PocketScreen" sharedElements={() => ['pocket-button']}></Snack.Screen>
-    <Snack.Screen component={BubbleDetails} name="BubbleDetails"></Snack.Screen>
-    <Snack.Screen component={BubbleCreate} name="BubbleCreate" sharedElements={() => ['plus-button']}></Snack.Screen>
+		<Snack.Screen component={PocketScreen} name="PocketScreen" sharedElements={() => ['pocket-button']}></Snack.Screen>
+		<Snack.Screen component={BubbleDetails} name="BubbleDetails"></Snack.Screen>
+		<Snack.Screen component={BubbleCreate} name="BubbleCreate" sharedElements={() => ['plus-button']}></Snack.Screen>
 
-    <Snack.Screen component={SettingsScreen} name="SettingsScreen"></Snack.Screen>
+		<Snack.Screen component={SettingsScreen} name="SettingsScreen"></Snack.Screen>
 
-  </Snack.Navigator>
+	</Snack.Navigator>
 );
 
 const mapStateToProps: MapStateToProps<StateProps, {}, types.RootState> = () => ({});

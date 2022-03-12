@@ -6,9 +6,9 @@ interface Props {
 }
 
 const SettingsScreen: React.FC<Props> = ({ }: Props) => {
-  return (
-    <></>
-  );
+	return (
+		<></>
+	);
 };
 
 export default SettingsScreen;

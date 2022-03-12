@@ -3,5 +3,5 @@ import * as reducers from './reducers';
 import * as types from './types';
 
 export {
-  actions, reducers, types,
+	actions, reducers, types,
 };

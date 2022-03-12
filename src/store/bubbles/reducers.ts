@@ -4,29 +4,29 @@ import { themeColors } from '~/static/theme';
 import { TypedEntries, deepRequired } from '~/utils/core';
 import type { SavedCircleData } from '~/types/Circles';
 export const initialState: State = {
-  databaseFetched: false,
-  themeColor: themeColors.Iris,
-  circleDatas: {},
+	databaseFetched: false,
+	themeColor: themeColors.twilight[100],
+	circleDatas: {},
 };
 
 export default function bubbleReducer(
-  state: State = initialState,
-  action: ActionTypes,
+	state: State = initialState,
+	action: ActionTypes,
 ): State {
-  switch (action.type) {
-    case DatabaseFetchedAction:
-      return { ...state, databaseFetched: true };
-    case DeleteBubble:
-      return { ...state, circleDatas: Object.fromEntries(TypedEntries(state.circleDatas).filter(([k]) => k !== action.id)) };
-    case SetBubbles:
-      return { ...state, circleDatas: Object.fromEntries(action.circleDatas.map(k => [k.metadata.id, k])) };
-    case AddBubble:
-      return { ...state, circleDatas: { ...state.circleDatas, [action.circleData.metadata.id]: action.circleData } };
-    case UpdateBubble:
-      return { ...state, circleDatas: { ...state.circleDatas, [action.id]: { ...state.circleDatas[action.id], ...deepRequired(action.circleData) as SavedCircleData<number> } } };
-    case SetThemeColor:
-      return { ...state, themeColor: action.color };
-    default:
-      return state;
-  }
+	switch (action.type) {
+		case DatabaseFetchedAction:
+			return { ...state, databaseFetched: true };
+		case DeleteBubble:
+			return { ...state, circleDatas: Object.fromEntries(TypedEntries(state.circleDatas).filter(([k]) => k !== action.id)) };
+		case SetBubbles:
+			return { ...state, circleDatas: Object.fromEntries(action.circleDatas.map(k => [k.metadata.id, k])) };
+		case AddBubble:
+			return { ...state, circleDatas: { ...state.circleDatas, [action.circleData.metadata.id]: action.circleData } };
+		case UpdateBubble:
+			return { ...state, circleDatas: { ...state.circleDatas, [action.id]: { ...state.circleDatas[action.id], ...deepRequired(action.circleData) as SavedCircleData<number> } } };
+		case SetThemeColor:
+			return { ...state, themeColor: action.color };
+		default:
+			return state;
+	}
 }

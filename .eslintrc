@@ -13,6 +13,9 @@
     "import/namespace": 0,
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": 0,
-    "eslint-comments/no-unlimited-disable": 1
+    "eslint-comments/no-unlimited-disable": 1,
+    "indent": "off",
+    "@typescript-eslint/indent": ["warn", "tab"],
+    "no-tabs": "off",
   }
 }

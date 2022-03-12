@@ -5,45 +5,45 @@ import type { CircleData, PartialCircle } from '~/types/Circles';
 import { deepRequired as removeUndefined } from '~/utils/core';
 
 const ReturnError = (error: string, args = {}) => ({
-  ...args,
-  error: Error(error),
-  result: null,
+	...args,
+	error: Error(error),
+	result: null,
 } as const);
 
 const ReturnResult = <T, K extends {} = {}>(result: T, args = {}) => ({
-  ...args,
-  error: null,
-  result,
+	...args,
+	error: null,
+	result,
 } as const);
 export class NotesRepository {
-  private ormRepository: Repository<NoteSchema>;
+	private ormRepository: Repository<NoteSchema>;
 
-  constructor(connection: Connection) {
-    this.ormRepository = connection.getRepository(NotesEntity);
-  }
+	constructor(connection: Connection) {
+		this.ormRepository = connection.getRepository(NotesEntity);
+	}
 
-  public async getAll(): Promise<NoteSchema[]> {
-    const notes = await this.ormRepository.find();
+	public async getAll(): Promise<NoteSchema[]> {
+		const notes = await this.ormRepository.find();
 
-    return notes;
-  }
+		return notes;
+	}
 
-  public async create(c: CircleData): Promise<NoteSchema> {
-    const note = this.ormRepository.create(DataToSchema(c));
-    await this.ormRepository.save(note);
-    return note;
-  }
+	public async create(c: CircleData): Promise<NoteSchema> {
+		const note = this.ormRepository.create(DataToSchema(c));
+		await this.ormRepository.save(note);
+		return note;
+	}
 
-  public async update(c: PartialCircle, id: string) {
-    const note = await this.ormRepository.findOne(id);
-    // TODO: Handle errors
-    if (!note)
-      return ReturnError('ID reference not found.');
-    const updateNote: PartialSchema = await this.ormRepository.save({ id: note.id, ...removeUndefined(DataToSchema(c)) });
-    return ReturnResult(updateNote);
-  }
+	public async update(c: PartialCircle, id: string) {
+		const note = await this.ormRepository.findOne(id);
+		// TODO: Handle errors
+		if (!note)
+			return ReturnError('ID reference not found.');
+		const updateNote: PartialSchema = await this.ormRepository.save({ id: note.id, ...removeUndefined(DataToSchema(c)) });
+		return ReturnResult(updateNote);
+	}
 
-  public async delete(id: string) {
-    return this.ormRepository.delete(id);
-  }
+	public async delete(id: string) {
+		return this.ormRepository.delete(id);
+	}
 }
