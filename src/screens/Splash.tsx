@@ -80,10 +80,12 @@ const BubblesScreen = ({ navigation, route }: Props) => {
 			))}
 			<View style={[StyleSheet.absoluteFill, { justifyContent: 'flex-end' }, styles.backdrop]} pointerEvents="box-none">
 				<Backdrop open={tabbarOpen} />
-				<AddBubbleButton start={0}
+				<AddBubbleButton startOpen={false}
 					style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}
 				/>
-				<PocketButton start={0}/>
+				<PocketButton startOpen={false}
+					style={{ position: 'absolute', left: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}
+				/>
 
 			</View>
 

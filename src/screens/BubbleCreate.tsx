@@ -17,8 +17,8 @@ const BubbleCreate: React.FC<Props> = ({ }: Props) => {
 
 	return (
 		<View style={styles.container}>
-			<AddBubbleButton start={1}
-				style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: 2 * FAB_OFFSETS.y + FAB_SIZE }}
+			<AddBubbleButton startOpen={true}
+				style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}
 			/>
 			<FloatingActionButton onPress={saveBubble} >
 				<Feather name="x" color={rgba(themeColors.blossom[100])} size={FAB_SIZE / 2} />

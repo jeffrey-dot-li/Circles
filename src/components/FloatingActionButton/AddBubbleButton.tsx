@@ -7,24 +7,24 @@ import { Feather as Icon } from '@expo/vector-icons';
 import type { RouteProp } from '@react-navigation/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SharedElement } from 'react-navigation-shared-element';
-import FloatingActionButton, { FAB_SIZE } from './FloatingActionButton';
+import FloatingActionButton, { FAB_OFFSETS, FAB_SIZE } from './FloatingActionButton';
 import { themeColors } from '~/static/theme';
 import { rgba, toHex } from '~/utils/color';
 import type { BubbleNavProp, StackParamList } from '~/navigators/bubbleStack';
 import type { FunctionalComponent, ReactProps } from '~/types/utils';
 
 interface Props {
-	start: number
+	startOpen: boolean
 }
 
-const AddBubbleButton: FunctionalComponent<Props> = ({ start, style }: ReactProps<Props>) => {
+const AddBubbleButton: FunctionalComponent<Props> = ({ startOpen, style }: ReactProps<Props>) => {
 	const navigation = useNavigation<BubbleNavProp<'Home'>>();
 	const route = useRoute<RouteProp<StackParamList, 'Home' | 'BubbleCreate'>>();
-	const open = useSharedValue(start);
+	const open = useSharedValue(Number(startOpen));
 	const callback = () => {
 		'worklet';
-		if (open.value !== start)
-			open.value = start;
+		if (open.value !== Number(startOpen))
+			open.value = Number(startOpen);
 	};
 
 	const onPress = () => {
@@ -39,17 +39,31 @@ const AddBubbleButton: FunctionalComponent<Props> = ({ start, style }: ReactProp
 		restSpeedThreshold: 0.00001,
 	}, callback));
 
-	const icon = useAnimatedStyle(() => ({
-		transform: [{ rotate: `${mix(openWithSpring.value, Math.PI / 4, 0)}rad` }],
-	}));
+	const iconAnimation = useAnimatedStyle(() => ({
+		transform: [
+			{ rotate: `${mix(openWithSpring.value, Math.PI / 4, 0)}rad` },
+
+		],
+	}), [openWithSpring.value]);
+
+	const buttonAnimation = useAnimatedStyle(() => ({
+		transform: [
+			{ translateY: -mix(openWithSpring.value, 0, FAB_SIZE + FAB_OFFSETS.y) },
+		],
+	}), [openWithSpring.value]);
 	return (
-		<SharedElement id={'plus-button'} style={style}>
-			<FloatingActionButton onPress={onPress} >
-				<Animated.View style={icon}>
-					<Icon name="x" color={rgba(themeColors.blossom[100])} size={FAB_SIZE / 2} />
-				</Animated.View>
-			</FloatingActionButton>
-		</SharedElement>
+		<View style={style}>
+			<Animated.View style={buttonAnimation} >
+				<SharedElement id={'plus-button'} >
+					{/* Can't have Animated.View as the first node inside SharedElement or get 'Object not extendible' error. */}
+					<FloatingActionButton onPress={onPress} >
+						<Animated.View style={iconAnimation} >
+							<Icon name="x" color={rgba(themeColors.blossom[100])} size={FAB_SIZE / 2} />
+						</Animated.View>
+					</FloatingActionButton>
+				</SharedElement>
+			</Animated.View>
+		</View>
 	);
 };
 
