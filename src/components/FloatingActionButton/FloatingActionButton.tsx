@@ -7,7 +7,7 @@ import type { Color } from '~/utils/color';
 import { $toHex, HSLWhite } from '~/utils/color';
 
 interface Props {
-	onPress: () => void
+	onPress?: () => void
 	size?: number
 	color?: Color
 }
@@ -20,7 +20,7 @@ export const FAB_OFFSETS = {
 export const FAB_SIZE = 64;
 
 const FloatingActionButton: FunctionalComponent<Props>
-	= ({ onPress, size = FAB_SIZE, color = HSLWhite, style, children }: ReactProps<Props>) => {
+	= ({ onPress = () => null, size = FAB_SIZE, color = HSLWhite, style, children }: ReactProps<Props>) => {
 		const buttonStyles = StyleSheet.create({
 			floatingActionButton: {
 				...style,

@@ -28,7 +28,7 @@ import { Bubble } from '~/components/Bubbles/Bubble';
 import { LavaLamp } from '~/components/Bubbles/LavaLamp';
 import type { bubbles } from '~/store/types';
 import type { BubbleNavProp, StackParamList } from '~/navigators/bubbleStack';
-import useBubbles, { useCreateCircles, useLoadCircles } from '~/data/hooks/bubbles';
+import { useActiveBubbles, useCreateCircles, useLoadCircles } from '~/data/hooks/bubbles';
 import { CircleDatas } from '~/static/mockCircles';
 import GradientBackground from '~/components/Bubbles/GradientBackground';
 import AddBubbleButton from '~/components/FloatingActionButton/AddBubbleButton';
@@ -58,16 +58,10 @@ type StateProps = Pick<bubbles.State, 'circleDatas'>;
 type Props = StateProps & NavigationProps;
 
 const BubblesScreen = ({ navigation, route }: Props) => {
-	const { activeBubbles } = useBubbles();
+	const { activeBubbles } = useActiveBubbles();
 	const loadCircles = useLoadCircles();
-	const createCircle = useCreateCircles();
 	useEffect(() => { loadCircles(); }, []);
 	const tabbarOpen = useSharedValue(0);
-
-	const createBubbleCallback = useCallback(async() => {
-		const createResult = createCircle();
-		setTimeout(async() => tabbarOpen.value === 1 ? navigation.push('BubbleDetails', { id: (await createResult).id }) : null, 300);
-	}, [tabbarOpen.value]);
 
 	const globalIsPaused = useDerivedValue(() => tabbarOpen.value === 1);
 	return (

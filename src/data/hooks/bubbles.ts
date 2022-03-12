@@ -94,10 +94,18 @@ export function useLoadCircles() {
 	return loadNotesFromDatabase;
 }
 
-export default function useBubbles() {
+export function useActiveBubbles() {
 	const bubblesState = useAppSelector(s => s.bubbles);
 	const activeBubbles = useMemo(() =>
 		TypedEntries(bubblesState.circleDatas).filter(([, v]) => !v.popped), [bubblesState.circleDatas]);
 
 	return { ...bubblesState, activeBubbles };
+}
+
+export function useAllBubbles() {
+	const bubblesState = useAppSelector(s => s.bubbles);
+	const allBubbles = useMemo(() =>
+		TypedEntries(bubblesState.circleDatas), [bubblesState.circleDatas]);
+
+	return { ...bubblesState, allBubbles };
 }
