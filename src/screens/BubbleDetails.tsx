@@ -3,6 +3,7 @@ import type { AppStateStatus } from 'react-native';
 import { AppState, Dimensions, Keyboard, Pressable, StyleSheet, Text, TextStyle, View } from 'react-native';
 import type { RouteProp } from '@react-navigation/native';
 import { ScrollView, TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { Feather } from '@expo/vector-icons';
 import { LavaLamp } from '~/components/Bubbles/LavaLamp';
 import FontStyles from '~/static/fonts';
 import ColorSelect from '~/components/Bubbles/ColorSelect';
@@ -11,9 +12,11 @@ import type { BubbleNavProp, StackParamList } from '~/navigators/bubbleStack';
 import { useAppSelector } from '~/store/types';
 import AppBar, { TitleTextInput } from '~/components/AppBar';
 import type { Color } from '~/utils/color';
-import { toHex } from '~/utils/color';
+import { rgba, toHex } from '~/utils/color';
+
 import { useDeleteCircle, useUpdateCircle } from '~/data/hooks/bubbles';
 import GradientBackground from '~/components/Bubbles/GradientBackground';
+import FloatingActionButton, { FAB_OFFSETS, FAB_SIZE } from '~/components/FloatingActionButton/FloatingActionButton';
 
 type ItemDetailsRouteProp = RouteProp<StackParamList, 'BubbleDetails'>;
 interface OwnProps {
@@ -50,15 +53,14 @@ const BubbleDetails = ({ navigation, route: { params: { id } } }: Props) => {
 		= useCallback((color: Color) => circleData ? updateCircle({ color }, id) : null, [updateCircle, id, circleData]);
 
 	const options = [{
-		name: 'Pop',
-		onPress: () => null,
-	}, {
 		name: 'Delete',
 		onPress: async() => {
 			await deleteBubble(id);
 			navigation.pop();
 		},
 	}];
+
+	const togglePopped = useCallback(() => updateCircle({ popped: !circleData?.popped }, id), [updateCircle, id, circleData]);
 
 	return (
 
@@ -83,6 +85,11 @@ const BubbleDetails = ({ navigation, route: { params: { id } } }: Props) => {
 					multiline={true}
 					style={[styles.contentText, FontStyles.textContent, StyleSheet.absoluteFill]} />
 			</View>
+			<FloatingActionButton type={circleData?.popped ? 'fill' : 'standard'}
+				style={{ position: 'absolute', left: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}
+				color={(themeColors.sunrise[100])} onPress={togglePopped}>
+				<Feather name="shopping-bag" color={circleData?.popped ? 'white' : rgba(themeColors.sunrise[100])} size={FAB_SIZE / 2} />
+			</FloatingActionButton>
 		</Pressable>
 	);
 };

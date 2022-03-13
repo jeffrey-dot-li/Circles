@@ -1,10 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import AppBar from '~/components/AppBar';
-import GradientBackground from '~/components/Bubbles/GradientBackground';
-import { LavaLamp } from '~/components/Bubbles/LavaLamp';
 import { FAB_OFFSETS } from '~/components/FloatingActionButton/FloatingActionButton';
 import PocketButton from '~/components/FloatingActionButton/PocketButton';
 import PocketListItem from '~/components/PocketList/PocketListItem';
@@ -23,7 +21,7 @@ const PocketScreen: React.FC<Props> = ({ }: Props) => {
 	const navigation = useNavigation();
 
 	return (
-		<View style={styles.container}>
+		<Pressable style={styles.container} onPress={() => navigation.goBack()}>
 			<AppBar title={'Pocket'} onBack={() => navigation.goBack()}/>
 			<FlatList style={styles.scrollList}
 				data={allBubbles}
@@ -35,7 +33,7 @@ const PocketScreen: React.FC<Props> = ({ }: Props) => {
 			<PocketButton startOpen={true}
 				style={{ position: 'absolute', left: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}
 			/>
-		</View>
+		</Pressable>
 
 	);
 };
