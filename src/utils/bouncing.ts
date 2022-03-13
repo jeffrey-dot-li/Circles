@@ -11,9 +11,9 @@ export const CruiseVelocity = 0.2;
 export const DeaccelConstant = 0.1;
 
 // Deaccel calculation
-export const CalcDeaccel = (vel: number) => {
+export const CalcDeaccel = (vel: number, ratio = 1) => {
 	'worklet';
-	if (Math.abs(vel) < CruiseVelocity) return vel;
+	if (Math.abs(vel) < CruiseVelocity * ratio) return vel;
 	return (0.99) * vel;
 };
 
@@ -23,6 +23,50 @@ interface BounceAnimationState extends AnimationState {
 	velocity: number
 }
 
+export const generateBounceEngine = (lowerBound: number, upperBound: number) =>
+	(position: number, initialVel: number, radius: number, totalVel: number, isPaused: Readonly<Animated.SharedValue<boolean>>) => {
+		// whoops so radius is actually diameter :/
+		'worklet';
+		const ratio = initialVel / totalVel;
+		return defineAnimation<BounceAnimationState, BounceAnimationState>(() => {
+			'worklet';
+			const onFrame: Animation<BounceAnimationState>['onFrame'] = (state, now) => {
+				'worklet';
+				if (isPaused.value) {
+					state.lastTimestamp = now;
+					return false;
+				}
+				const { direction, velocity } = state;
+
+				state.current += direction * velocity;
+				state.velocity = CalcDeaccel(velocity, ratio);
+
+				if (state.current >= upperBound - radius)
+					state.direction = Math.abs(state.direction) * Math.sign(velocity) * -1;
+				else if (state.current <= lowerBound)
+					state.direction = Math.abs(state.direction) * Math.sign(velocity);
+
+				state.lastTimestamp = now;
+				return false;
+			};
+			const onStart: Animation<BounceAnimationState>['onStart'] = (state, _, now) => {
+				'worklet';
+				state.current = position;
+				state.velocity = initialVel;
+				state.lastTimestamp = now;
+				state.direction = 1;
+			};
+			const callback = () => {
+			// Calls once the animation ends.
+				'worklet';
+			};
+			return {
+				onFrame,
+				onStart,
+				callback,
+			};
+		});
+	};
 export const withBouncing = (position: number, initialVel: number, lowerBound: number, upperBound: number, isPaused: Readonly<Animated.SharedValue<boolean>>) => {
 	'worklet';
 	return defineAnimation<BounceAnimationState, BounceAnimationState>(() => {

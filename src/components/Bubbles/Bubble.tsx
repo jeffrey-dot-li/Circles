@@ -9,7 +9,7 @@ import { Gesture, GestureDetector, PanGestureHandler } from 'react-native-gestur
 import { useNavigation } from '@react-navigation/native';
 import type { CircleData } from '../../types/Circles';
 import type { PropsWithStyle } from '../../types/utils';
-import { withBouncing } from '../../utils/bouncing';
+import { generateBounceEngine, withBouncing } from '../../utils/bouncing';
 import { rgba } from '~/utils/color';
 import FontStyles from '~/static/fonts';
 
@@ -65,6 +65,8 @@ const height = widthAndHeight.height;
 
 const normal = new Normal();
 const useRandomVelVector: () => Vector<Animated.SharedValue<number>> = () => useVector(normal.RNOR() * normal.RNOR(), normal.RNOR() * normal.RNOR());
+const bounceGeneratorX = generateBounceEngine(0, width);
+const bounceGeneratorY = generateBounceEngine(0, height);
 
 export const Bubble = ({ circleData: { radius, color, position, velocity, ...note }, globalIsPaused, style, id }: PropsWithStyle<Props>) => {
 	const navigation = useNavigation<BubbleNavProp<'Home'>>();
@@ -74,11 +76,12 @@ export const Bubble = ({ circleData: { radius, color, position, velocity, ...not
 	const startPosition = useVector();
 	const animatedPos = useVector(mix(Math.random(), 0, width - radius), mix(Math.random(), 0, height - radius));
 	const animatedVel = useRandomVelVector();
+	const totalVel = useDerivedValue(() => Math.sqrt(Math.pow(animatedVel.x.value, 2) + Math.pow(animatedVel.y.value, 2)), [animatedVel.x.value, animatedVel.y.value]);
 
 	useEffect(() => {
-		animatedPos.x.value = (withBouncing(animatedPos.x.value, animatedVel.x.value, 0, width - radius, masterIsPaused));
-		animatedPos.y.value = (withBouncing(animatedPos.y.value, animatedVel.y.value, 0, height - radius, masterIsPaused));
-	}, [masterIsPaused.value]);
+		animatedPos.x.value = (bounceGeneratorX(animatedPos.x.value, animatedVel.x.value, radius, totalVel.value, masterIsPaused));
+		animatedPos.y.value = (bounceGeneratorY(animatedPos.y.value, animatedVel.y.value, radius, totalVel.value, masterIsPaused));
+	}, [masterIsPaused.value, radius]);
 
 	const animatedStyle = useAnimatedStyle(() => {
 		return {
@@ -113,8 +116,8 @@ export const Bubble = ({ circleData: { radius, color, position, velocity, ...not
 		}).onFinalize(() => {
 			'worklet';
 			selfIsPaused.value = false;
-			animatedPos.x.value = (withBouncing(animatedPos.x.value, animatedVel.x.value, 0, width - radius, masterIsPaused));
-			animatedPos.y.value = (withBouncing(animatedPos.y.value, animatedVel.y.value, 0, height - radius, masterIsPaused));
+			animatedPos.x.value = (bounceGeneratorX(animatedPos.x.value, animatedVel.x.value, radius, totalVel.value, masterIsPaused));
+			animatedPos.y.value = (bounceGeneratorY(animatedPos.y.value, animatedVel.y.value, radius, totalVel.value, masterIsPaused));
 		});
 
 	const backgroundColor = { ...color, a: 0.5 };
