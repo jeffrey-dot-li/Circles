@@ -66,6 +66,7 @@ const BubbleCreate: React.FC<Props> = ({ }: Props) => {
 			<FloatingActionButton onPress={saveBubble}
 				style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}
 				color={themeColors.evergreen[65]}
+				type="fill"
 			>
 				<Feather name="check" color={'white'} size={FAB_SIZE / 2} />
 			</FloatingActionButton>
@@ -120,6 +121,3 @@ const styles = StyleSheet.create({
 		zIndex: 100,
 	},
 });
-function GenerateCircleData(arg0: { radius: number; color: Color; title: string; content: string }): CircleData<number> | (() => CircleData<number>) {
-	throw new Error('Function not implemented.');
-}

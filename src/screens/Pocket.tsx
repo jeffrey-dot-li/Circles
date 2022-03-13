@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
@@ -19,10 +20,11 @@ const PocketScreen: React.FC<Props> = ({ }: Props) => {
 	const loadCircles = useLoadCircles();
 	useEffect(() => { loadCircles(); }, []);
 	const { allBubbles } = useAllBubbles();
+	const navigation = useNavigation();
 
 	return (
 		<View style={styles.container}>
-			<AppBar title={'Pocket'} onBack={() => null}/>
+			<AppBar title={'Pocket'} onBack={() => navigation.goBack()}/>
 			<FlatList style={styles.scrollList}
 				data={allBubbles}
 				keyExtractor={item => item[0]}
