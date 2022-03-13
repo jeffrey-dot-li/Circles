@@ -34,9 +34,10 @@ export const bounceGenerator = (lowerBound: number, upperBound: number) => (init
 			state.current += direction * velocity;
 			state.velocity = CalcDeaccel(velocity);
 
-			if (state.current + radius >= upperBound || state.current - radius < lowerBound)
-				state.direction *= -1;
-
+			if (state.current + radius >= upperBound)
+				state.direction = Math.abs(state.direction) * -1;
+			else if (state.current - radius <= lowerBound)
+				state.direction = Math.abs(state.direction);
 			state.lastTimestamp = now;
 			return false;
 		};
@@ -66,8 +67,10 @@ export const withBouncing = (position: number, initialVel: number, lowerBound: n
 			state.velocity = CalcDeaccel(velocity);
 			// console.log({velocity});
 
-			if (state.current >= upperBound || state.current < lowerBound)
-				state.direction *= -1;
+			if (state.current >= upperBound)
+				state.direction = Math.abs(state.direction) * Math.sign(velocity) * -1;
+			else if (state.current <= lowerBound)
+				state.direction = Math.abs(state.direction) * Math.sign(velocity);
 
 			state.lastTimestamp = now;
 			return false;
