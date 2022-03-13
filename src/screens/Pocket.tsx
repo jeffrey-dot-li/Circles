@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import AppBar from '~/components/AppBar';
+import GradientBackground from '~/components/Bubbles/GradientBackground';
+import { LavaLamp } from '~/components/Bubbles/LavaLamp';
 import { FAB_OFFSETS } from '~/components/FloatingActionButton/FloatingActionButton';
 import PocketButton from '~/components/FloatingActionButton/PocketButton';
 import PocketListItem from '~/components/PocketList/PocketListItem';
@@ -17,8 +19,6 @@ const PocketScreen: React.FC<Props> = ({ }: Props) => {
 	const loadCircles = useLoadCircles();
 	useEffect(() => { loadCircles(); }, []);
 	const { allBubbles } = useAllBubbles();
-
-	// const renderItem =
 
 	return (
 		<View style={styles.container}>
@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 		position: 'relative',
 		paddingTop: 32,
+		backgroundColor: 'rgba(0,0,0,0.1)',
 	},
 	scrollList:
 	{

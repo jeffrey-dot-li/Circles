@@ -17,11 +17,12 @@ import { BlurView } from 'expo-blur';
 import { Vector, useVector } from 'react-native-redash';
 import { connect } from 'react-redux';
 import type { RouteProp } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SharedElement } from 'react-navigation-shared-element';
 import { bounceGenerator } from '~/utils/bouncing';
 import Tabbar from '~/components/tabbar/Tabbar';
-import Backdrop from '~/components/tabbar/Backdrop';
+import Overlay from '~/components/tabbar/Backdrop';
 import GlobalStyles from '~/static/styles';
 import { SavedCircleData } from '~/types/Circles';
 import { Bubble } from '~/components/Bubbles/Bubble';
@@ -61,9 +62,8 @@ const BubblesScreen = ({ navigation, route }: Props) => {
 	const { activeBubbles } = useActiveBubbles();
 	const loadCircles = useLoadCircles();
 	useEffect(() => { loadCircles(); }, []);
-	const tabbarOpen = useSharedValue(0);
-
-	const globalIsPaused = useDerivedValue(() => tabbarOpen.value === 1);
+	const isFocused = useIsFocused();
+	const globalIsPaused = useDerivedValue(() => !isFocused, [isFocused]);
 	return (
 		<View style={styles.container}>
 			<GradientBackground>
@@ -73,7 +73,7 @@ const BubblesScreen = ({ navigation, route }: Props) => {
 				<Bubble circleData={item} key={id} id={id} globalIsPaused={globalIsPaused} onPress={() => navigation.push('BubbleDetails', { id })} />
 			))}
 			<View style={[StyleSheet.absoluteFill, { justifyContent: 'flex-end' }, styles.backdrop]} pointerEvents="box-none">
-				<Backdrop open={tabbarOpen} />
+
 				<AddBubbleButton startOpen={false}
 					style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}
 				/>

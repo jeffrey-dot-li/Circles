@@ -38,9 +38,10 @@ const Snack = createSharedElementStackNavigator<StackParamList>();
 const BubbleStack = (_: Props) => (
 	<Snack.Navigator screenOptions={{
 		headerShown: false,
-		presentation: 'modal',
+		presentation: 'transparentModal',
 		cardOverlayEnabled: true,
 		gestureEnabled: true,
+
 	}} initialRouteName="Home"
 	>
 		<Snack.Screen component={BubbleScreen} name="Home"></Snack.Screen>

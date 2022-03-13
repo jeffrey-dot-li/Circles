@@ -1,5 +1,6 @@
 import { defineAnimation, mix } from 'react-native-redash';
 import type { Animation, AnimationState } from 'react-native-redash';
+import type Animated from 'react-native-reanimated';
 import { withDecay } from 'react-native-reanimated';
 import { Vec, VecFromAngle } from './svg';
 
@@ -21,51 +22,22 @@ interface BounceAnimationState extends AnimationState {
 	direction: number
 	velocity: number
 }
-export const bounceGenerator = (lowerBound: number, upperBound: number) => (initialVelocity: number, radius: number) => {
-	'worklet';
-	// const randomPosition = mix(Math.random(), lowerBound + radius, upperBound - radius);
-	//   return withBouncing(randomPosition, initialVelocity, radius, lo);
 
-	return defineAnimation<BounceAnimationState, BounceAnimationState>(() => {
-		'worklet';
-		const onFrame: Animation<BounceAnimationState>['onFrame'] = (state, now) => {
-			'worklet';
-			const { direction, velocity } = state;
-			state.current += direction * velocity;
-			state.velocity = CalcDeaccel(velocity);
-
-			if (state.current + radius >= upperBound)
-				state.direction = Math.abs(state.direction) * -1;
-			else if (state.current - radius <= lowerBound)
-				state.direction = Math.abs(state.direction);
-			state.lastTimestamp = now;
-			return false;
-		};
-		const onStart: Animation<BounceAnimationState>['onStart'] = (state, _, now) => {
-			'worklet';
-			state.current = mix(Math.random(), lowerBound + radius, upperBound - radius);
-			state.lastTimestamp = now;
-			state.velocity = initialVelocity;
-			state.direction = 1;
-		};
-		return {
-			onFrame,
-			onStart,
-		};
-	});
-};
-
-export const withBouncing = (position: number, initialVel: number, lowerBound: number, upperBound: number) => {
+export const withBouncing = (position: number, initialVel: number, lowerBound: number, upperBound: number, isPaused: Readonly<Animated.SharedValue<boolean>>) => {
 	'worklet';
 	return defineAnimation<BounceAnimationState, BounceAnimationState>(() => {
 		'worklet';
 		const onFrame: Animation<BounceAnimationState>['onFrame'] = (state, now) => {
 			'worklet';
+			if (isPaused.value) {
+				state.lastTimestamp = now;
+				// console.log({ paused: true });
+				return false;
+			}
 			const { direction, velocity } = state;
 
 			state.current += direction * velocity;
 			state.velocity = CalcDeaccel(velocity);
-			// console.log({velocity});
 
 			if (state.current >= upperBound)
 				state.direction = Math.abs(state.direction) * Math.sign(velocity) * -1;
@@ -93,3 +65,37 @@ export const withBouncing = (position: number, initialVel: number, lowerBound: n
 		};
 	});
 };
+
+// export const bounceGenerator = (lowerBound: number, upperBound: number) => (initialVelocity: number, radius: number) => {
+// 	'worklet';
+// 	// const randomPosition = mix(Math.random(), lowerBound + radius, upperBound - radius);
+// 	//   return withBouncing(randomPosition, initialVelocity, radius, lo);
+
+// 	return defineAnimation<BounceAnimationState, BounceAnimationState>(() => {
+// 		'worklet';
+// 		const onFrame: Animation<BounceAnimationState>['onFrame'] = (state, now) => {
+// 			'worklet';
+// 			const { direction, velocity } = state;
+// 			state.current += direction * velocity;
+// 			state.velocity = CalcDeaccel(velocity);
+
+// 			if (state.current + radius >= upperBound)
+// 				state.direction = Math.abs(state.direction) * -1;
+// 			else if (state.current - radius <= lowerBound)
+// 				state.direction = Math.abs(state.direction);
+// 			state.lastTimestamp = now;
+// 			return false;
+// 		};
+// 		const onStart: Animation<BounceAnimationState>['onStart'] = (state, _, now) => {
+// 			'worklet';
+// 			state.current = mix(Math.random(), lowerBound + radius, upperBound - radius);
+// 			state.lastTimestamp = now;
+// 			state.velocity = initialVelocity;
+// 			state.direction = 1;
+// 		};
+// 		return {
+// 			onFrame,
+// 			onStart,
+// 		};
+// 	});
+// };

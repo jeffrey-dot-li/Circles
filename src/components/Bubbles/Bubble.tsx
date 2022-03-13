@@ -76,9 +76,9 @@ export const Bubble = ({ circleData: { radius, color, position, velocity, ...not
 	const animatedVel = useRandomVelVector();
 
 	useEffect(() => {
-		animatedPos.x.value = (withBouncing(animatedPos.x.value, animatedVel.x.value, 0, width - radius));
-		animatedPos.y.value = (withBouncing(animatedPos.y.value, animatedVel.y.value, 0, height - radius));
-	}, []);
+		animatedPos.x.value = (withBouncing(animatedPos.x.value, animatedVel.x.value, 0, width - radius, masterIsPaused));
+		animatedPos.y.value = (withBouncing(animatedPos.y.value, animatedVel.y.value, 0, height - radius, masterIsPaused));
+	}, [masterIsPaused.value]);
 
 	const animatedStyle = useAnimatedStyle(() => {
 		return {
@@ -113,8 +113,8 @@ export const Bubble = ({ circleData: { radius, color, position, velocity, ...not
 		}).onFinalize(() => {
 			'worklet';
 			selfIsPaused.value = false;
-			animatedPos.x.value = (withBouncing(animatedPos.x.value, animatedVel.x.value, 0, width - radius));
-			animatedPos.y.value = (withBouncing(animatedPos.y.value, animatedVel.y.value, 0, height - radius));
+			animatedPos.x.value = (withBouncing(animatedPos.x.value, animatedVel.x.value, 0, width - radius, masterIsPaused));
+			animatedPos.y.value = (withBouncing(animatedPos.y.value, animatedVel.y.value, 0, height - radius, masterIsPaused));
 		});
 
 	const backgroundColor = { ...color, a: 0.5 };
