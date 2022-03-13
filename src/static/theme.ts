@@ -2,7 +2,7 @@ import color, { HSLFromString } from '~/utils/color';
 import condensedThemeHSL from '~/theme/colors';
 import { MapEntries } from '~/utils/core';
 
-export const themeColors = MapEntries(condensedThemeHSL)(hsl => MapEntries(hsl)(v => HSLFromString(v)));
+export const themeColors = MapEntries(condensedThemeHSL)((_, hsl) => MapEntries(hsl)((_, v) => HSLFromString(v)));
 
 // export const themeColors = {
 // 	Lava: color(355, 86, 60),

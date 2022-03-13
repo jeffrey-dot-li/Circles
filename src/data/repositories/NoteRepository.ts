@@ -2,6 +2,7 @@ import type { Connection, Repository } from 'typeorm';
 import type { NoteSchema, PartialSchema } from '../entities/NoteModel';
 import { DataToSchema, NotesEntity } from '../entities/NoteModel';
 import type { CircleData, PartialCircle } from '~/types/Circles';
+import type { Optional } from '~/utils/core';
 import { deepRequired as removeUndefined } from '~/utils/core';
 
 const ReturnError = (error: string, args = {}) => ({
@@ -39,7 +40,9 @@ export class NotesRepository {
 		// TODO: Handle errors
 		if (!note)
 			return ReturnError('ID reference not found.');
-		const updateNote: PartialSchema = await this.ormRepository.save({ id: note.id, ...removeUndefined(DataToSchema(c)) });
+		const updateData = removeUndefined(DataToSchema(c, { id: note.id }));
+		const updateNote: PartialSchema
+			= await this.ormRepository.save(updateData);
 		return ReturnResult(updateNote);
 	}
 

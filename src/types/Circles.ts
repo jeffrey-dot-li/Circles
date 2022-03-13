@@ -1,4 +1,3 @@
-import type { Vector } from 'react-native-redash';
 import type { Color } from '~/utils/color';
 
 export type DeepPartial<T> = {
@@ -10,14 +9,12 @@ export interface CircleMetadata {
 	createdAt: number
 	updatedAt: number
 }
-export interface CircleData<T = number> {
+export interface CircleData {
 	radius: number
-	position: Vector<T>
-	velocity: Vector<T>
 	color: Color
 	title: string
 	content: string
 	popped: boolean
 }
-export type SavedCircleData<T = number> = CircleData<T> & { metadata: CircleMetadata };
+export type SavedCircleData = CircleData & { metadata: CircleMetadata };
 export type PartialCircle = DeepPartial<CircleData> & { color?: Color };

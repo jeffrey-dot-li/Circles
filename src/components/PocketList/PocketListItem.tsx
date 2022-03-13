@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import FloatingActionButton, { FAB_SIZE } from '../FloatingActionButton/FloatingActionButton';
 import Row from '../tabbar/Row';
 import { themeColors } from '~/static/theme';
@@ -8,6 +9,8 @@ import type { SavedCircleData } from '~/types/Circles';
 import type { FunctionalComponent, ReactProps } from '~/types/utils';
 import { rgba } from '~/utils/color';
 import FontStyles from '~/static/fonts';
+import { useUpdateCircle } from '~/data/hooks/bubbles';
+import type { BubbleNavProp } from '~/navigators/bubbleStack';
 
 interface Props {
 	id: string
@@ -17,6 +20,11 @@ interface Props {
 const PocketListItem: FunctionalComponent<Props>
 	= ({ id, circleData, children, style }: ReactProps<Props>) => {
 		const backgroundColor = { ...circleData.color, a: 0.1 };
+		const updateCircle = useUpdateCircle();
+		const togglePopped = useCallback(() => {
+			updateCircle({ popped: !circleData.popped }, id);
+		}, [circleData.popped]);
+		const navigation = useNavigation<BubbleNavProp<'Pocket'>>();
 
 		const styles = StyleSheet.create({
 			container: {
@@ -35,21 +43,19 @@ const PocketListItem: FunctionalComponent<Props>
 
 		});
 		return (
-			<Pressable style={styles.container}>
-				<View style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-					{circleData.title ? (<Text style={[staticStyles.title, FontStyles.textBanner]} numberOfLines={1}>{circleData.title}</Text>) : <></>}
-					<Text style={[staticStyles.content, FontStyles.textContent]} numberOfLines={3}>{circleData.content}</Text>
-				</View>
-				<FloatingActionButton size={40}>
-					<Feather name="shopping-bag" color={rgba(themeColors.sunrise[100])} size={24} />
-				</FloatingActionButton>
-
-				{/* <View style={{ width: 12 }}/>
-				<FloatingActionButton size={40}>
-					<Feather name="shopping-bag" color={rgba(themeColors.sunrise[100])} size={24} />
-				</FloatingActionButton> */
-				}
-			</Pressable>
+			<>
+				<Pressable style={styles.container} onPress={() => navigation.navigate('BubbleDetails', { id })}>
+					<View style={{ flex: 1, display: 'flex', flexDirection: 'column', alignSelf: 'stretch' }}>
+						{circleData.title ? (<Text style={[staticStyles.title, FontStyles.textBanner]} numberOfLines={1}>{circleData.title}</Text>) : <></>}
+						<Text style={[staticStyles.content, FontStyles.textContent, {}]} numberOfLines={3}>{circleData.content}</Text>
+					</View>
+					<View style={{ width: 20 }}/>
+					<FloatingActionButton size={40} type={circleData.popped ? 'fill' : 'ghost'} color={(themeColors.sunrise[100])} onPress={togglePopped}>
+						<Feather name="shopping-bag" color={circleData.popped ? 'white' : rgba(themeColors.sunrise[100])} size={24} />
+					</FloatingActionButton>
+				</Pressable>
+				<View style={{ height: 16 }}/>
+			</>
 		);
 	};
 
@@ -74,13 +80,14 @@ const staticStyles = StyleSheet.create({
 		// borderStyle: 'solid',
 	},
 	title: {
-		alignSelf: 'center',
+		alignSelf: 'stretch',
 		color: 'white',
-		textAlign: 'center',
+		textAlign: 'left',
 		fontSize: 14,
+		marginBottom: 2,
 	},
 	content: {
-		alignSelf: 'center',
+		alignSelf: 'stretch',
 		color: 'white',
 		textAlign: 'left',
 		fontSize: 8,

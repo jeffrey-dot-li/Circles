@@ -47,7 +47,7 @@ const BubbleDetails = ({ navigation, route: { params: { id } } }: Props) => {
 	}, [SaveBubbleAppState]);
 
 	const updateCircleColor
-= useCallback((color: Color) => circleData ? updateCircle({ color }, id) : null, [updateCircle, id, circleData]);
+		= useCallback((color: Color) => circleData ? updateCircle({ color }, id) : null, [updateCircle, id, circleData]);
 
 	const options = [{
 		name: 'Pop',
@@ -64,9 +64,9 @@ const BubbleDetails = ({ navigation, route: { params: { id } } }: Props) => {
 
 		<Pressable style={[StyleSheet.absoluteFill, styles.container]} onPress={Keyboard.dismiss}>
 			<GradientBackground start={circleData?.color}>
-				<LavaLamp/>
+				<LavaLamp />
 			</GradientBackground>
-			<AppBar TitleBar={<TitleTextInput value={title} onChangeText={setTitle} onBlur={SaveBubble}/>} onBack={() => navigation.pop()} options={options}></AppBar>
+			<AppBar TitleBar={<TitleTextInput value={title} onChangeText={setTitle} onBlur={SaveBubble} />} onBack={() => navigation.pop()} options={options}></AppBar>
 			<View style={[styles.colorBar]}>
 				{
 					Object.entries(themeColors).map(([, color], i) => (
@@ -81,7 +81,7 @@ const BubbleDetails = ({ navigation, route: { params: { id } } }: Props) => {
 			<View style={[styles.content]}>
 				<TextInput value={content} onChangeText={setContent} onBlur={SaveBubble}
 					multiline={true}
-					style={[styles.contentText, FontStyles.textContent, StyleSheet.absoluteFill]}/>
+					style={[styles.contentText, FontStyles.textContent, StyleSheet.absoluteFill]} />
 			</View>
 		</Pressable>
 	);

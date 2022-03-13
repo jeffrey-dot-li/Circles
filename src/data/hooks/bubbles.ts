@@ -24,9 +24,6 @@ const generateCircleData = (c: CreateCircleData): CircleData =>
 	({
 		...c,
 		popped: false,
-		// Todo: Generate initial position and velocity
-		position: Vec(0, 0),
-		velocity: GenerateVelocity(),
 	});
 
 export function useCreateCircles() {
@@ -105,7 +102,7 @@ export function useActiveBubbles() {
 export function useAllBubbles() {
 	const bubblesState = useAppSelector(s => s.bubbles);
 	const allBubbles = useMemo(() =>
-		TypedEntries(bubblesState.circleDatas), [bubblesState.circleDatas]);
+		TypedEntries(bubblesState.circleDatas), [bubblesState.circleDatas]).sort(([, a], [, b]) => a.metadata.createdAt - b.metadata.createdAt);
 
 	return { ...bubblesState, allBubbles };
 }

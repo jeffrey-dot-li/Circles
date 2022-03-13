@@ -2,8 +2,8 @@ import type { EntitySchemaColumnOptions } from 'typeorm';
 
 export interface BaseColumnSchemaInterface {
 	id: string
-	createdAt: string
-	updatedAt: string
+	createdAt: number
+	updatedAt: number
 }
 
 export type SchemaWithMetadata<DataSchema> = DataSchema & BaseColumnSchemaInterface;

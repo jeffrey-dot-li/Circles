@@ -68,7 +68,7 @@ const useRandomVelVector: () => Vector<Animated.SharedValue<number>> = () => use
 const bounceGeneratorX = generateBounceEngine(0, width);
 const bounceGeneratorY = generateBounceEngine(0, height);
 
-export const Bubble = ({ circleData: { radius, color, position, velocity, ...note }, globalIsPaused, style, id }: PropsWithStyle<Props>) => {
+export const Bubble = ({ circleData: { radius, color, ...note }, globalIsPaused, style, id }: PropsWithStyle<Props>) => {
 	const navigation = useNavigation<BubbleNavProp<'Home'>>();
 	const selfIsPaused = useSharedValue(false);
 	const masterIsPaused = useDerivedValue(() => selfIsPaused.value || globalIsPaused.value, [selfIsPaused.value, globalIsPaused.value]);

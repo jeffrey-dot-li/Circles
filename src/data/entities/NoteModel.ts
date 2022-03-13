@@ -2,27 +2,26 @@ import { Column, CreateDateColumn, Entity, EntitySchema, EntitySchemaColumnOptio
 import { DeepPartial } from 'redux';
 import type { SchemaWithMetadata } from './base';
 import { BaseColumnSchemaInterface, BaseColumnSchemaPart } from './base';
-import type { PartialCircle, SavedCircleData } from '~/types/Circles';
+import type { CircleMetadata, PartialCircle, SavedCircleData } from '~/types/Circles';
 import { CircleData } from '~/types/Circles';
 import { Color, fromHex, toHex } from '~/utils/color';
 import { Vec } from '~/utils/svg';
 import type { MandateProps } from '~/types/utils';
+import { deepRequired } from '~/utils/core';
 
 export type PartialSchema = MandateProps<Partial<NoteSchema>, 'id'>;
 
-export const SchemaToDataPartial = <D extends PartialSchema>({ content, radius, title, id, popped, color, ...note }: D) => ({
+export const SchemaToDataPartial = <D extends PartialSchema>({ content, radius, title, id, popped, color, ...note }: D) => deepRequired({
 	content,
 	radius,
 	title,
 	color: typeof color === 'string' ? fromHex(color) : undefined,
 	metadata:
-{
-	createdAt: note.createdAt && Date.parse(note.createdAt),
-	updatedAt: note.updatedAt && Date.parse(note.updatedAt),
-	id,
-},
-	position: Vec(note.positionX, note.positionY),
-	velocity: Vec(note.velocityX, note.velocityY),
+	{
+		createdAt: note.createdAt,
+		updatedAt: note.updatedAt,
+		id,
+	},
 	popped,
 });
 
@@ -32,37 +31,32 @@ export const SchemaToData = ({ content, radius, title, id, popped, ...note }: No
 	title,
 	color: fromHex(note.color),
 	metadata:
-{
-	createdAt: Date.parse(note.createdAt),
-	updatedAt: Date.parse(note.updatedAt),
-	id,
-},
-	position: Vec(note.positionX, note.positionY),
-	velocity: Vec(note.velocityX, note.velocityY),
+	{
+		createdAt: note.createdAt,
+		updatedAt: note.updatedAt,
+		id,
+	},
 	popped,
 });
 
-export const DataToSchema = <D extends PartialCircle = PartialCircle>({ content, radius, title, color, position, velocity }: D) => ({
-	content,
-	radius,
-	title,
-	color: color && toHex(color),
-	positionX: position?.x,
-	positionY: position?.y,
-	velocityX: velocity?.x,
-	velocityY: velocity?.y,
-});
+export const DataToSchema
+	= <D extends PartialCircle = PartialCircle>	({ content, radius, title, color, popped }: D, { createdAt, updatedAt, id }: Partial<CircleMetadata> = {}): Partial<NoteSchema> => ({
+		content,
+		radius,
+		title,
+		popped,
+		color: color && toHex(color),
+
+		createdAt,
+		updatedAt,
+		id,
+	});
 
 export interface NoteDataSchema {
 	title: string
 	content: string
 
 	radius: number
-
-	positionX: number
-	positionY: number
-	velocityX: number
-	velocityY: number
 
 	color: string
 	popped: boolean
@@ -87,26 +81,6 @@ export const NotesEntity = new EntitySchema<NoteSchema>({
 	color:
 {
 	type: 'varchar',
-},
-	positionX:
-{
-	type: 'double',
-	name: 'position_x',
-},
-	positionY:
-{
-	type: 'double',
-	name: 'position_y',
-},
-	velocityX:
-{
-	type: 'double',
-	name: 'velocity_x',
-},
-	velocityY:
-{
-	type: 'double',
-	name: 'velocity_y',
 },
 	radius:
 {
