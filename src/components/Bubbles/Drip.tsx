@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import React, { ComponentProps, useMemo } from 'react';
 import { View } from 'react-native';
 import { createPath } from 'react-native-redash/src/Paths';
 import { Path, Svg } from 'react-native-svg';
@@ -47,7 +47,7 @@ export interface MeltProps {
 
 export const Melt = ({ style, radius, offsetGen = Math.random, width, height, pathProps }: PropsWithStyle<MeltProps>) => {
 	const numCircles = Math.ceil(width / (2 * radius));
-	const origins = [...Array(numCircles).keys()].map((_, i) => 0.5 + 0.5 * offsetGen(i) * evenOrOdd(i));
+	const origins = useMemo(() => [...Array(numCircles).keys()].map((_, i) => 0.5 + 0.5 * offsetGen(i) * evenOrOdd(i)), []);
 	const path = pathStroke({ radius, origins, height });
 
 	return (

@@ -31,6 +31,9 @@ const styles = StyleSheet.create({
 		},
 		zIndex: 1,
 		elevation: 3,
+
+		// borderWidth: 4,
+		// borderStyle: 'solid',
 	},
 	title: {
 		alignSelf: 'center',
@@ -103,10 +106,9 @@ export const Bubble = ({ circleData: { radius, color, position, velocity, ...not
 			animatedVel.y.value = velocityY / 200;
 		}).onFinalize(() => {
 			'worklet';
-
 			selfIsPaused.value = false;
-			animatedPos.x.value = (withBouncing(animatedPos.x.value, animatedVel.x.value, radius, width - radius));
-			animatedPos.y.value = (withBouncing(animatedPos.y.value, animatedVel.y.value, radius, height - radius));
+			animatedPos.x.value = (withBouncing(animatedPos.x.value, animatedVel.x.value, 0, width - radius));
+			animatedPos.y.value = (withBouncing(animatedPos.y.value, animatedVel.y.value, 0, height - radius));
 		});
 
 	const onSwipeEvent = useAnimatedGestureHandler({
@@ -138,6 +140,8 @@ export const Bubble = ({ circleData: { radius, color, position, velocity, ...not
 		},
 	});
 
+	const backgroundColor = { ...color, a: 0.5 };
+
 	const gesture = Gesture.Race(pan, tap);
 	return (
 		<GestureDetector gesture={gesture}>
@@ -152,10 +156,10 @@ export const Bubble = ({ circleData: { radius, color, position, velocity, ...not
 					style={[
 						styles.touchable,
 						{ width: radius, height: radius, borderRadius: radius },
-						{ backgroundColor: rgba(color) },
+						{ backgroundColor: rgba(backgroundColor), borderColor: rgba(color) },
 					]}
 				>
-					<Text style={[styles.title, FontStyles.textBanner, { maxWidth: radius * 0.75 }]} numberOfLines={1}>{note.title}</Text>
+					{note.title ? (<Text style={[styles.title, FontStyles.textBanner, { maxWidth: radius * 0.75 }]} numberOfLines={1}>{note.title}</Text>) : <></>}
 					<Text style={[styles.content, FontStyles.textContent, { maxWidth: radius * 0.8 }]} numberOfLines={3}>{note.content}</Text>
 				</TouchableOpacity>
 			</Animated.View>

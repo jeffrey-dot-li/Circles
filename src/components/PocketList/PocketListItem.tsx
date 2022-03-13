@@ -45,7 +45,8 @@ const PocketListItem: FunctionalComponent<Props>
 				{/* <View style={{ width: 12 }}/>
 				<FloatingActionButton size={40}>
 					<Feather name="shopping-bag" color={rgba(themeColors.sunrise[100])} size={24} />
-				</FloatingActionButton> */}
+				</FloatingActionButton> */
+				}
 			</Pressable>
 		);
 	};

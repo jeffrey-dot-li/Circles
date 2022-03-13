@@ -6,14 +6,14 @@ import { Vec, VecFromAngle } from './svg';
 export const GenerateVelocity = () =>
 	VecFromAngle([1, 2 * Math.PI * Math.random()]);
 
-export const CruiseVelocity = 0.1;
+export const CruiseVelocity = 0.2;
 export const DeaccelConstant = 0.1;
 
 // Deaccel calculation
 export const CalcDeaccel = (vel: number) => {
 	'worklet';
 	if (Math.abs(vel) < CruiseVelocity) return vel;
-	return (0.5) * vel;
+	return (0.99) * vel;
 };
 
 interface BounceAnimationState extends AnimationState {
