@@ -1,7 +1,6 @@
-import { defineAnimation, mix } from 'react-native-redash';
+import { defineAnimation } from 'react-native-redash';
 import type { Animation, AnimationState } from 'react-native-redash';
 import type Animated from 'react-native-reanimated';
-import { withDecay } from 'react-native-reanimated';
 import { Vec, VecFromAngle } from './svg';
 
 export const GenerateVelocity = () =>
