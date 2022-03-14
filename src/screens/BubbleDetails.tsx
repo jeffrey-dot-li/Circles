@@ -90,6 +90,13 @@ const BubbleDetails = ({ navigation, route: { params: { id } } }: Props) => {
 				color={(themeColors.sunrise[100])} onPress={togglePopped}>
 				<Feather name="shopping-bag" color={circleData?.popped ? 'white' : rgba(themeColors.sunrise[100])} size={FAB_SIZE / 2} />
 			</FloatingActionButton>
+			<FloatingActionButton onPress={() => navigation.pop()}
+				style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}
+				color={themeColors.evergreen[65]}
+				type="fill"
+			>
+				<Feather name="check" color={'white'} size={FAB_SIZE / 2} />
+			</FloatingActionButton>
 		</Pressable>
 	);
 };
@@ -115,6 +122,9 @@ const styles = StyleSheet.create({
 	content:
 	{
 		flex: 1,
+		margin: 16,
+		borderRadius: 16,
+		padding: 6,
 		alignSelf: 'stretch',
 		backgroundColor: 'rgba(255,255,255,0.7)',
 	},

@@ -92,6 +92,10 @@ const styles = StyleSheet.create({
 	content:
 	{
 		flex: 1,
+		margin: 16,
+		borderRadius: 16,
+		padding: 6,
+
 		alignSelf: 'stretch',
 		backgroundColor: 'rgba(255,255,255,0.7)',
 	},
