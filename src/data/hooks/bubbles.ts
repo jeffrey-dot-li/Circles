@@ -102,7 +102,6 @@ export function useActiveBubbles() {
 export function useAllBubbles() {
 	const bubblesState = useAppSelector(s => s.bubbles);
 	const allBubbles = useMemo(() =>
-		TypedEntries(bubblesState.circleDatas), [bubblesState.circleDatas]).sort(([, a], [, b]) => a.metadata.createdAt - b.metadata.createdAt);
-
+		TypedEntries(bubblesState.circleDatas), [bubblesState.circleDatas]).sort(([, a], [, b]) => b.metadata.createdAt - a.metadata.createdAt);
 	return { ...bubblesState, allBubbles };
 }
