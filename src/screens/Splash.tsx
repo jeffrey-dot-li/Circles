@@ -3,6 +3,7 @@ import React, { Ref, useCallback, useEffect, useMemo, useRef, useState } from 'r
 import {
 	Dimensions,
 	StyleSheet,
+	Text,
 	View,
 } from 'react-native';
 import {
@@ -21,6 +22,8 @@ import AddBubbleButton from '~/components/FloatingActionButton/AddBubbleButton';
 import PocketButton from '~/components/FloatingActionButton/PocketButton';
 import { FAB_OFFSETS } from '~/components/FloatingActionButton/FloatingActionButton';
 import GlobalStyles from '~/static/styles';
+import RippleButton from '~/components/RippleButton';
+import { themeColors } from '~/static/theme';
 
 type ItemDetailsRouteProp = RouteProp<StackParamList, 'Home'>;
 interface NavigationProps {
@@ -55,6 +58,9 @@ const BubblesScreen = ({ navigation, route }: Props) => {
 				<PocketButton startOpen={false}
 					style={{ position: 'absolute', left: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y + insets.bottom }}
 				/>
+				<RippleButton color={themeColors.blossom[100]}>
+					<Text>Hello There</Text>
+				</RippleButton>
 			</View>
 		</SafeAreaView>
 	);
