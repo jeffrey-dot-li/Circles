@@ -2,7 +2,7 @@
   "expo": {
     "name": "Circles",
     "slug": "Circles",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "privacy": "unlisted",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
