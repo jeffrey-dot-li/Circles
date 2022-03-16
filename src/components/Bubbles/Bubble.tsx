@@ -8,6 +8,8 @@ import { useVector } from 'react-native-redash/src/Vectors';
 import { Gesture, GestureDetector, PanGestureHandler } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
+import * as Haptics from 'expo-haptics';
+import { Rubik_300Light } from '@expo-google-fonts/rubik';
 import type { CircleData } from '../../types/Circles';
 import type { PropsWithStyle } from '../../types/utils';
 import { generateBounceEngine, withBouncing } from '../../utils/bouncing';
@@ -35,9 +37,6 @@ const styles = StyleSheet.create({
 		},
 		zIndex: 1,
 		elevation: 3,
-
-		// borderWidth: 4,
-		// borderStyle: 'solid',
 	},
 	title: {
 		alignSelf: 'center',
@@ -92,12 +91,15 @@ export const Bubble = ({ circleData: { radius, color, ...note }, globalIsPaused,
 		};
 	});
 
-	const wrapper = () => navigation.navigate('BubbleDetails', { id });
-	const tap = Gesture.Tap().onEnd(() => {
+	const wrapper = () => {
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+		navigation.navigate('BubbleDetails', { id });
+	};
+	const longPress = Gesture.LongPress().minDuration(300).onStart(() => {
 		runOnJS(wrapper)();
 	});
 
-	const pan = Gesture.Pan()
+	const pan = Gesture.Pan().minDistance(20)
 		.onStart(() => {
 			'worklet';
 			startPosition.x.value = animatedPos.x.value;
@@ -122,7 +124,7 @@ export const Bubble = ({ circleData: { radius, color, ...note }, globalIsPaused,
 
 	const backgroundColor = { ...color, a: 0.5 };
 
-	const gesture = Gesture.Exclusive(pan, tap);
+	const gesture = Gesture.Race(pan, longPress);
 	return (
 		<GestureDetector gesture={gesture}>
 			<Animated.View

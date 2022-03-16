@@ -26,7 +26,7 @@ const defaultProps: Required<Props>
 
 export const FAB_OFFSETS = {
 	x: 20,
-	y: 40,
+	y: 20,
 };
 
 const buttonStyle = (type: ButtonType, color: Color) => {
