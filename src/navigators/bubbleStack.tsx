@@ -7,6 +7,8 @@ import { } from 'react-native-shared-element';
 import type { MapStateToProps } from 'react-redux';
 import { connect } from 'react-redux';
 import type { ParamListBase } from '@react-navigation/native';
+import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View } from 'react-native';
 import type { types } from '../store';
 
 import BubbleScreen from '~/screens/Splash';
@@ -35,25 +37,28 @@ type Props = StateProps;
 
 const Snack = createSharedElementStackNavigator<StackParamList>();
 
-const BubbleStack = (_: Props) => (
-	<Snack.Navigator screenOptions={{
-		headerShown: false,
-		presentation: 'transparentModal',
-		cardOverlayEnabled: true,
-		gestureEnabled: true,
+const BubbleStack = (_: Props) => {
+	const insets = useSafeAreaInsets();
+	return 	(
+		<Snack.Navigator screenOptions={{
+			headerShown: false,
+			presentation: 'transparentModal',
+			cardOverlayEnabled: true,
+			gestureEnabled: true,
 
-	}} initialRouteName="Home"
-	>
-		<Snack.Screen component={BubbleScreen} name="Home"></Snack.Screen>
+		}} initialRouteName="Home"
+		>
+			<Snack.Screen component={BubbleScreen} name="Home"></Snack.Screen>
 
-		<Snack.Screen component={PocketScreen} name="PocketScreen" sharedElements={() => ['pocket-button']}></Snack.Screen>
-		<Snack.Screen component={BubbleDetails} name="BubbleDetails"></Snack.Screen>
-		<Snack.Screen component={BubbleCreate} name="BubbleCreate" sharedElements={() => ['plus-button']}></Snack.Screen>
+			<Snack.Screen component={PocketScreen} name="PocketScreen" sharedElements={() => ['pocket-button']}></Snack.Screen>
+			<Snack.Screen component={BubbleDetails} name="BubbleDetails"></Snack.Screen>
+			<Snack.Screen component={BubbleCreate} name="BubbleCreate" sharedElements={() => ['plus-button']}></Snack.Screen>
 
-		<Snack.Screen component={SettingsScreen} name="SettingsScreen"></Snack.Screen>
-
-	</Snack.Navigator>
-);
+			<Snack.Screen component={SettingsScreen} name="SettingsScreen"></Snack.Screen>
+		</Snack.Navigator>
+	);
+}
+;
 
 const mapStateToProps: MapStateToProps<StateProps, {}, types.RootState> = () => ({});
 export default connect(mapStateToProps)(BubbleStack);

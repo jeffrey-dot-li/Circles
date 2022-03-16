@@ -91,17 +91,37 @@ export function useLoadCircles() {
 	return loadNotesFromDatabase;
 }
 
-export function useActiveBubbles() {
-	const bubblesState = useAppSelector(s => s.bubbles);
-	const activeBubbles = useMemo(() =>
-		TypedEntries(bubblesState.circleDatas).filter(([, v]) => !v.popped), [bubblesState.circleDatas]);
-
-	return { ...bubblesState, activeBubbles };
+export type BubbleRecord = [string, SavedCircleData];
+export interface UseBubblesOptions {
+	filter?: (c: BubbleRecord) => boolean
+	sort?: (a: BubbleRecord, b: BubbleRecord) => number
+	filterInv?: boolean
+	sortInv?: boolean
 }
 
-export function useAllBubbles() {
+export const BubbleFilters = {
+	active: (c: BubbleRecord) => !c[1].popped,
+} as const;
+
+export const BubbleSorters = {
+	createdAtRecent: (a: BubbleRecord, b: BubbleRecord) => b[1].metadata.createdAt - a[1].metadata.createdAt,
+	updatedAtRecent: (a: BubbleRecord, b: BubbleRecord) => b[1].metadata.updatedAt - a[1].metadata.updatedAt,
+	alphabetical: (a: BubbleRecord, b: BubbleRecord) => a[1].title.localeCompare(b[1].title),
+	size: (a: BubbleRecord, b: BubbleRecord) => b[1].radius - a[1].radius,
+} as const;
+
+export function useBubbles({ filter, sort, filterInv, sortInv }: UseBubblesOptions = {}) {
 	const bubblesState = useAppSelector(s => s.bubbles);
-	const allBubbles = useMemo(() =>
-		TypedEntries(bubblesState.circleDatas), [bubblesState.circleDatas]).sort(([, a], [, b]) => b.metadata.createdAt - a.metadata.createdAt);
-	return { ...bubblesState, allBubbles };
+	const bubbles = useMemo(() => {
+		let bubbles = TypedEntries(bubblesState.circleDatas);
+		if (filter)
+			bubbles = bubbles.filter(filterInv ? c => !filter(c) : filter);
+
+		if (sort)
+			bubbles = bubbles.sort(sortInv ? (a, b) => sort(b, a) : sort);
+
+		return bubbles;
+	}, [bubblesState.circleDatas, filter, sort, sortInv, filterInv]);
+
+	return { ...bubblesState, bubbles };
 }

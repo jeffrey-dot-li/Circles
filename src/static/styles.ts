@@ -6,9 +6,18 @@ const GlobalStyles = StyleSheet.create({
 		borderColor: 'black',
 		borderStyle: 'solid',
 	},
-	container: {
+	screenContainer:
+	{
 		flex: 1,
-		backgroundColor: '#f3f3f9',
+		position: 'relative',
+		display: 'flex',
+		flexGrow: 1,
+		flexDirection: 'column',
+	},
+	contentContainer: {
+		// Within the safe area
+		flex: 1,
+		position: 'relative',
 	},
 	itemList: {
 		flex: 1,

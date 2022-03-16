@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import type { GestureResponderEvent } from 'react-native';
 import { Dimensions, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useDerivedValue, useSharedValue } from 'react-native-reanimated';
@@ -7,6 +7,7 @@ import { mix } from 'react-native-redash';
 import { useVector } from 'react-native-redash/src/Vectors';
 import { Gesture, GestureDetector, PanGestureHandler } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import type { CircleData } from '../../types/Circles';
 import type { PropsWithStyle } from '../../types/utils';
 import { generateBounceEngine, withBouncing } from '../../utils/bouncing';
@@ -59,14 +60,8 @@ interface Props {
 	onPress?: () => void
 }
 
-const widthAndHeight = Dimensions.get('screen');
-const width = widthAndHeight.width;
-const height = widthAndHeight.height;
-
 const normal = new Normal();
 const useRandomVelVector: () => Vector<Animated.SharedValue<number>> = () => useVector(normal.RNOR() * normal.RNOR(), normal.RNOR() * normal.RNOR());
-const bounceGeneratorX = generateBounceEngine(0, width);
-const bounceGeneratorY = generateBounceEngine(0, height);
 
 export const Bubble = ({ circleData: { radius, color, ...note }, globalIsPaused, style, id }: PropsWithStyle<Props>) => {
 	const navigation = useNavigation<BubbleNavProp<'Home'>>();
@@ -74,6 +69,11 @@ export const Bubble = ({ circleData: { radius, color, ...note }, globalIsPaused,
 	const masterIsPaused = useDerivedValue(() => selfIsPaused.value || globalIsPaused.value, [selfIsPaused.value, globalIsPaused.value]);
 
 	const startPosition = useVector();
+
+	const { height, width } = useSafeAreaFrame();
+	const bounceGeneratorX = useMemo(() => generateBounceEngine(0, width), [width]);
+	const bounceGeneratorY = useMemo(() => generateBounceEngine(0, height), [height]);
+
 	const animatedPos = useVector(mix(Math.random(), 0, width - radius), mix(Math.random(), 0, height - radius));
 	const animatedVel = useRandomVelVector();
 	const totalVel = useDerivedValue(() => Math.sqrt(Math.pow(animatedVel.x.value, 2) + Math.pow(animatedVel.y.value, 2)), [animatedVel.x.value, animatedVel.y.value]);

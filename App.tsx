@@ -3,7 +3,7 @@ import 'reflect-metadata';
 
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, LogBox, StyleSheet, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { DatabaseConnectionProvider } from './src/data/connexion';
@@ -11,11 +11,13 @@ import { useProjectFonts } from './src/static/fonts';
 import AppStack from './src/navigators/bubbleStack';
 
 import { store } from './src/store';
+// useSafeAreaInsets
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: '#fff',
+
 	},
 });
 
@@ -28,7 +30,6 @@ const App = () => {
 				<SafeAreaProvider>
 					<View style={styles.container}>
 						<NavigationContainer>
-
 							{
 								loaded
 									? (
@@ -39,15 +40,13 @@ const App = () => {
 									)
 									: (<ActivityIndicator />)
 							}
-
 						</NavigationContainer>
 					</View>
 				</SafeAreaProvider>
 			</Provider>
 		</DatabaseConnectionProvider>
 	);
-}
-	;
+};
 
 export default App;
 

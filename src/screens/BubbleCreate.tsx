@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Dimensions, Keyboard, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import AddBubbleButton from '~/components/FloatingActionButton/AddBubbleButton';
 import FloatingActionButton, { FAB_OFFSETS, FAB_SIZE } from '~/components/FloatingActionButton/FloatingActionButton';
 import type { Color } from '~/utils/color';
@@ -12,10 +13,8 @@ import ColorSelect from '~/components/Bubbles/ColorSelect';
 import GradientBackground from '~/components/Bubbles/GradientBackground';
 import { LavaLamp } from '~/components/Bubbles/LavaLamp';
 import FontStyles from '~/static/fonts';
-import type { CircleData } from '~/types/Circles';
 import { DefaultCreateCircleData, useCreateCircles } from '~/data/hooks/bubbles';
-
-const { height, width, fontScale, scale } = Dimensions.get('screen');
+import GlobalStyles from '~/static/styles';
 
 interface Props {
 
@@ -35,42 +34,43 @@ const BubbleCreate: React.FC<Props> = ({ }: Props) => {
 		navigation.goBack();
 	};
 	return (
-
-		<Pressable style={[StyleSheet.absoluteFill, styles.container]} onPress={Keyboard.dismiss}>
+		<SafeAreaView style={GlobalStyles.screenContainer}>
 			<GradientBackground start={circleData?.color}>
 				<LavaLamp/>
 			</GradientBackground>
-			<AppBar TitleBar={
-				<TitleTextInput value={circleData.title} onChangeText={setTitle}/>
-			}/>
+			<Pressable style={GlobalStyles.contentContainer} onPress={Keyboard.dismiss}>
+				<AppBar TitleBar={
+					<TitleTextInput value={circleData.title} onChangeText={setTitle}/>
+				}/>
 
-			<View style={[styles.colorBar]}>
-				{
-					Object.entries(themeColors).map(([, color], i) => (
-						<View style={{ padding: 2 }} key={i}>
-							<Pressable onPress={() => setCircleColor(color[100])}>
-								<ColorSelect active={circleData && toHex(color[100]) === toHex(circleData.color)} color={color[100]} />
-							</Pressable>
-						</View>
-					))
-				}
-			</View>
-			<View style={[styles.content]}>
-				<TextInput value={circleData.content} onChangeText={setContent}
-					multiline={true}
-					style={[styles.contentText, FontStyles.textContent, StyleSheet.absoluteFill]}/>
-			</View>
-			<AddBubbleButton startOpen={true}
-				style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}
-			/>
-			<FloatingActionButton onPress={saveBubble}
-				style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}
-				color={themeColors.evergreen[65]}
-				type="fill"
-			>
-				<Feather name="check" color={'white'} size={FAB_SIZE / 2} />
-			</FloatingActionButton>
-		</Pressable>
+				<View style={[styles.colorBar]}>
+					{
+						Object.entries(themeColors).map(([, color], i) => (
+							<View style={{ padding: 2 }} key={i}>
+								<Pressable onPress={() => setCircleColor(color[100])}>
+									<ColorSelect active={circleData && toHex(color[100]) === toHex(circleData.color)} color={color[100]} />
+								</Pressable>
+							</View>
+						))
+					}
+				</View>
+				<View style={[styles.content]}>
+					<TextInput value={circleData.content} onChangeText={setContent}
+						multiline={true}
+						style={[styles.contentText, FontStyles.textContent, StyleSheet.absoluteFill]}/>
+				</View>
+				<AddBubbleButton startOpen={true}
+					style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}
+				/>
+				<FloatingActionButton onPress={saveBubble}
+					style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}
+					color={themeColors.evergreen[65]}
+					type="fill"
+				>
+					<Feather name="check" color={'white'} size={FAB_SIZE / 2} />
+				</FloatingActionButton>
+			</Pressable>
+		</SafeAreaView>
 	);
 };
 
@@ -78,8 +78,7 @@ export default BubbleCreate;
 
 const styles = StyleSheet.create({
 	container: {
-		height,
-		width,
+		flex: 1,
 		flexGrow: 1,
 		position: 'relative',
 		flexDirection: 'column',

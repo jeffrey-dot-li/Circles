@@ -10,7 +10,6 @@ import GlobalStyles from '~/static/styles';
 import type { PropsWithStyle } from '~/types/utils';
 import Normal from '~/utils/Ziggurat';
 
-const widthAndHeight = Dimensions.get('screen');
 interface Props {}
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
@@ -68,6 +67,7 @@ const blocs = [...Array(2).keys()].map(() => {
 });
 
 export const LavaLamp = (props: PropsWithStyle<Props>) => {
+	const widthAndHeight = Dimensions.get('screen');
 	return (
 		<Animated.View style={[StyleSheet.absoluteFill, { justifyContent: 'center', alignItems: 'center' }]}>
 			{blocs.map((v, key) => (

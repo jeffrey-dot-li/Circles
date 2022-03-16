@@ -2,45 +2,25 @@ import React, { Ref, useCallback, useEffect, useMemo, useRef, useState } from 'r
 
 import {
 	Dimensions,
-	Image,
-	Pressable,
 	StyleSheet,
-	Text,
-	TouchableOpacity,
 	View,
-} from 'react-native'; // eslint-disable-line
-import Animated, {
+} from 'react-native';
+import {
 	useDerivedValue,
-	useSharedValue,
 } from 'react-native-reanimated';
-import { BlurView } from 'expo-blur';
-import { Vector, useVector } from 'react-native-redash';
-import { connect } from 'react-redux';
 import type { RouteProp } from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
+import { SafeAreaView, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Bubble } from '~/components/Bubbles/Bubble';
 import { LavaLamp } from '~/components/Bubbles/LavaLamp';
 import type { bubbles } from '~/store/types';
 import type { BubbleNavProp, StackParamList } from '~/navigators/bubbleStack';
-import { useActiveBubbles, useCreateCircles, useLoadCircles } from '~/data/hooks/bubbles';
-import { CircleDatas } from '~/static/mockCircles';
+import { BubbleFilters, useBubbles, useLoadCircles } from '~/data/hooks/bubbles';
 import GradientBackground from '~/components/Bubbles/GradientBackground';
 import AddBubbleButton from '~/components/FloatingActionButton/AddBubbleButton';
 import PocketButton from '~/components/FloatingActionButton/PocketButton';
 import { FAB_OFFSETS } from '~/components/FloatingActionButton/FloatingActionButton';
-
-const widthAndHeight = Dimensions.get('screen');
-const width = widthAndHeight.width;
-const height = widthAndHeight.height;
-
-interface NoteItem {
-	id: number
-	text: string
-	is_toggled: boolean
-}
-
-// const bounceX = bounceGenerator(0, width);
-// const bounceY = bounceGenerator(0, height);
+import GlobalStyles from '~/static/styles';
 
 type ItemDetailsRouteProp = RouteProp<StackParamList, 'Home'>;
 interface NavigationProps {
@@ -52,31 +32,31 @@ type StateProps = Pick<bubbles.State, 'circleDatas'>;
 type Props = StateProps & NavigationProps;
 
 const BubblesScreen = ({ navigation, route }: Props) => {
-	const { activeBubbles } = useActiveBubbles();
+	const { bubbles } = useBubbles({ filter: BubbleFilters.active });
 	const loadCircles = useLoadCircles();
 	useEffect(() => { loadCircles(); }, []);
 	const isFocused = useIsFocused();
 	const globalIsPaused = useDerivedValue(() => !isFocused, [isFocused]);
+	const onPress = (id: string) => () => navigation.push('BubbleDetails', { id });
+	const insets = useSafeAreaInsets();
 	return (
-		<View style={styles.container}>
+		<SafeAreaView style={GlobalStyles.screenContainer}>
 			<GradientBackground>
 				<LavaLamp />
 			</GradientBackground>
-			{activeBubbles.map(([id, item]) => (
-				<Bubble circleData={item} key={id} id={id} globalIsPaused={globalIsPaused} onPress={() => navigation.push('BubbleDetails', { id })} />
+			{bubbles.map(([id, item]) => (
+				<Bubble circleData={item} key={id} id={id} globalIsPaused={globalIsPaused} onPress={onPress(id)} />
 			))}
 			<View style={[StyleSheet.absoluteFill, { justifyContent: 'flex-end' }, styles.backdrop]} pointerEvents="box-none">
 
 				<AddBubbleButton startOpen={false}
-					style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}
+					style={{ position: 'absolute', right: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y + insets.bottom }}
 				/>
 				<PocketButton startOpen={false}
-					style={{ position: 'absolute', left: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y }}
+					style={{ position: 'absolute', left: FAB_OFFSETS.x, bottom: FAB_OFFSETS.y + insets.bottom }}
 				/>
-
 			</View>
-
-		</View>
+		</SafeAreaView>
 	);
 };
 
@@ -84,12 +64,6 @@ export default (BubblesScreen);
 const styles = StyleSheet.create({
 	backdrop: {
 		zIndex: 101,
-	},
-	container: {
-		height,
-		width,
-		position: 'relative',
-		paddingTop: 32,
 	},
 	nonBlurredContent: {
 		zIndex: 100,
