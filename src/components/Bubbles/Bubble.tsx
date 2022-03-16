@@ -3,7 +3,8 @@ import type { GestureResponderEvent } from 'react-native';
 import { Dimensions, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useDerivedValue, useSharedValue } from 'react-native-reanimated';
 import type { Vector } from 'react-native-redash';
-import { mix } from 'react-native-redash';
+import { mix, withPause } from 'react-native-redash';
+
 import { useVector } from 'react-native-redash/src/Vectors';
 import { Gesture, GestureDetector, State } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
@@ -77,9 +78,9 @@ export const Bubble = ({ circleData: { radius, color, ...note }, globalIsPaused,
 	const totalVel = useDerivedValue(() => Math.sqrt(Math.pow(animatedVel.x.value, 2) + Math.pow(animatedVel.y.value, 2)), [animatedVel.x.value, animatedVel.y.value]);
 
 	useEffect(() => {
-		animatedPos.x.value = (bounceGeneratorX(animatedPos.x.value, animatedVel.x.value, radius, totalVel.value, masterIsPaused));
-		animatedPos.y.value = (bounceGeneratorY(animatedPos.y.value, animatedVel.y.value, radius, totalVel.value, masterIsPaused));
-	}, [masterIsPaused.value, radius]);
+		animatedPos.x.value = withPause(bounceGeneratorX(animatedPos.x.value, animatedVel.x.value, radius, totalVel.value), masterIsPaused);
+		animatedPos.y.value = withPause(bounceGeneratorY(animatedPos.y.value, animatedVel.y.value, radius, totalVel.value), masterIsPaused);
+	}, []);
 
 	const animatedStyle = useAnimatedStyle(() => {
 		return {
@@ -119,8 +120,8 @@ export const Bubble = ({ circleData: { radius, color, ...note }, globalIsPaused,
 			'worklet';
 			selfIsPaused.value = false;
 			if (state === State.END) {
-				animatedPos.x.value = (bounceGeneratorX(animatedPos.x.value, animatedVel.x.value, radius, totalVel.value, masterIsPaused));
-				animatedPos.y.value = (bounceGeneratorY(animatedPos.y.value, animatedVel.y.value, radius, totalVel.value, masterIsPaused));
+				animatedPos.x.value = withPause(bounceGeneratorX(animatedPos.x.value, animatedVel.x.value, radius, totalVel.value), masterIsPaused);
+				animatedPos.y.value = withPause(bounceGeneratorY(animatedPos.y.value, animatedVel.y.value, radius, totalVel.value), masterIsPaused);
 			}
 		});
 

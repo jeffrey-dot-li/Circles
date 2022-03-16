@@ -1,5 +1,5 @@
-import { defineAnimation } from 'react-native-redash';
-import type { Animation, AnimationState } from 'react-native-redash';
+import { animationParameter, defineAnimation } from 'react-native-redash';
+import type { Animation, AnimationParameter, AnimationState } from 'react-native-redash';
 import type Animated from 'react-native-reanimated';
 import { Vec, VecFromAngle } from './svg';
 
@@ -22,8 +22,18 @@ interface BounceAnimationState extends AnimationState {
 	velocity: number
 }
 
+const withCustomAnimation = (
+	animationParam: AnimationParameter,
+) => {
+	'worklet';
+	return defineAnimation(() => {
+		'worklet';
+		return animationParameter(animationParam);
+	});
+};
+
 export const generateBounceEngine = (lowerBound: number, upperBound: number) =>
-	(position: number, initialVel: number, radius: number, totalVel: number, isPaused: Readonly<Animated.SharedValue<boolean>>) => {
+	(position: number, initialVel: number, radius: number, totalVel: number) => {
 		// whoops so radius is actually diameter :/
 		'worklet';
 		const ratio = initialVel / totalVel;
@@ -31,10 +41,6 @@ export const generateBounceEngine = (lowerBound: number, upperBound: number) =>
 			'worklet';
 			const onFrame: Animation<BounceAnimationState>['onFrame'] = (state, now) => {
 				'worklet';
-				if (isPaused.value) {
-					state.lastTimestamp = now;
-					return false;
-				}
 				const { direction, velocity } = state;
 
 				state.current += direction * velocity;
