@@ -5,11 +5,10 @@ import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useDeri
 import type { Vector } from 'react-native-redash';
 import { mix } from 'react-native-redash';
 import { useVector } from 'react-native-redash/src/Vectors';
-import { Gesture, GestureDetector, PanGestureHandler } from 'react-native-gesture-handler';
+import { Gesture, GestureDetector, State } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
-import { Rubik_300Light } from '@expo-google-fonts/rubik';
 import type { CircleData } from '../../types/Circles';
 import type { PropsWithStyle } from '../../types/utils';
 import { generateBounceEngine, withBouncing } from '../../utils/bouncing';
@@ -92,14 +91,16 @@ export const Bubble = ({ circleData: { radius, color, ...note }, globalIsPaused,
 	});
 
 	const wrapper = () => {
-		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 		navigation.navigate('BubbleDetails', { id });
 	};
-	const longPress = Gesture.LongPress().minDuration(300).onStart(() => {
+	const longPress = Gesture.LongPress().minDuration(400).maxDistance(50).onStart(() => {
 		runOnJS(wrapper)();
 	});
 
-	const pan = Gesture.Pan().minDistance(20)
+	const onPress = Gesture.Tap().onEnd(() => {});
+
+	const pan = Gesture.Pan().minDistance(50)
 		.onStart(() => {
 			'worklet';
 			startPosition.x.value = animatedPos.x.value;
@@ -107,7 +108,6 @@ export const Bubble = ({ circleData: { radius, color, ...note }, globalIsPaused,
 			selfIsPaused.value = true;
 		}).onChange(({ translationX, translationY }) => {
 			'worklet';
-
 			animatedPos.x.value = translationX + startPosition.x.value;
 			animatedPos.y.value = translationY + startPosition.y.value;
 		}).onEnd(({ velocityX, velocityY }) => {
@@ -115,16 +115,18 @@ export const Bubble = ({ circleData: { radius, color, ...note }, globalIsPaused,
 
 			animatedVel.x.value = velocityX / 200;
 			animatedVel.y.value = velocityY / 200;
-		}).onFinalize(() => {
+		}).onFinalize(({ state }) => {
 			'worklet';
 			selfIsPaused.value = false;
-			animatedPos.x.value = (bounceGeneratorX(animatedPos.x.value, animatedVel.x.value, radius, totalVel.value, masterIsPaused));
-			animatedPos.y.value = (bounceGeneratorY(animatedPos.y.value, animatedVel.y.value, radius, totalVel.value, masterIsPaused));
+			if (state === State.END) {
+				animatedPos.x.value = (bounceGeneratorX(animatedPos.x.value, animatedVel.x.value, radius, totalVel.value, masterIsPaused));
+				animatedPos.y.value = (bounceGeneratorY(animatedPos.y.value, animatedVel.y.value, radius, totalVel.value, masterIsPaused));
+			}
 		});
 
 	const backgroundColor = { ...color, a: 0.5 };
 
-	const gesture = Gesture.Race(pan, longPress);
+	const gesture = Gesture.Race(pan, longPress, onPress);
 	return (
 		<GestureDetector gesture={gesture}>
 			<Animated.View
