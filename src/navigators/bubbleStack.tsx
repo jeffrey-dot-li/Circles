@@ -16,6 +16,7 @@ import BubbleDetails from '~/screens/BubbleDetails';
 import BubbleCreate from '~/screens/BubbleCreate';
 import SettingsScreen from '~/screens/Settings';
 import PocketScreen from '~/screens/Pocket';
+import TestScreen from '~/screens/Test';
 // import BubbleDetails from '~/screens/BubbleDetails';
 
 export interface StackParamList extends ParamListBase {
@@ -24,6 +25,7 @@ export interface StackParamList extends ParamListBase {
 	{
 		id: string
 	}
+	Test: undefined
 	BubbleCreate: undefined
 	PocketScreen: undefined
 	SettingsScreen: undefined
@@ -49,6 +51,7 @@ const BubbleStack = (_: Props) => {
 		}} initialRouteName="Home"
 		>
 			<Snack.Screen component={BubbleScreen} name="Home"></Snack.Screen>
+			<Snack.Screen component={TestScreen} name="Test"></Snack.Screen>
 
 			<Snack.Screen component={PocketScreen} name="PocketScreen" sharedElements={() => ['pocket-button']}></Snack.Screen>
 			<Snack.Screen component={BubbleDetails} name="BubbleDetails"></Snack.Screen>

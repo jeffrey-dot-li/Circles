@@ -7,14 +7,15 @@ type OptionalProps =
 {
 	cx: number
 	cy: number
+	r: number
+
 } & PathProps;
 
 interface RequiredProps {
-	r: number
 }
 
 type Props = ComposeProps<OptionalProps, RequiredProps>;
-const Circle = ({ cx: cx_, cy: cy_, r, ...pathProps }: Props) => {
+const Circle = ({ cx: cx_, cy: cy_, r = 0, ...pathProps }: Props) => {
 	const cx = cx_ || r;
 	const cy = cy_ || r;
 	const circlePath = [

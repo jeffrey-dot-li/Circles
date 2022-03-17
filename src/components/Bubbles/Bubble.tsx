@@ -13,6 +13,7 @@ import * as Haptics from 'expo-haptics';
 import type { CircleData } from '../../types/Circles';
 import type { PropsWithStyle } from '../../types/utils';
 import { generateBounceEngine, withBouncing } from '../../utils/bouncing';
+import Blob from './Blob';
 import { rgba } from '~/utils/color';
 import FontStyles from '~/static/fonts';
 
@@ -25,9 +26,6 @@ const useCopyVector = (v: Vector) => useVector(v.x, v.y);
 
 const styles = StyleSheet.create({
 	touchable: {
-		shadowColor: '#000',
-		shadowOpacity: 0.2,
-		shadowRadius: 10,
 		flexDirection: 'column',
 		justifyContent: 'center',
 		alignContent: 'center',
@@ -49,6 +47,11 @@ const styles = StyleSheet.create({
 		color: 'white',
 		textAlign: 'left',
 		fontSize: 8,
+	},
+	blob: {
+		position: 'absolute',
+		zIndex: -1,
+		// pointerEvents: 'none',
 	},
 });
 
@@ -141,11 +144,11 @@ export const Bubble = ({ circleData: { radius, color, ...note }, globalIsPaused,
 					style={[
 						styles.touchable,
 						{ width: radius, height: radius, borderRadius: radius },
-						{ backgroundColor: rgba(backgroundColor), borderColor: rgba(color) },
 					]}
 				>
 					{note.title ? (<Text style={[styles.title, FontStyles.textBanner, { maxWidth: radius * 0.75 }]} numberOfLines={1}>{note.title}</Text>) : <></>}
 					<Text style={[styles.content, FontStyles.textContent, { maxWidth: radius * 0.8 }]} numberOfLines={3}>{note.content}</Text>
+					<Blob color={color} paused={masterIsPaused} size={radius} style={styles.blob}></Blob>
 				</TouchableOpacity>
 			</Animated.View>
 		</GestureDetector>

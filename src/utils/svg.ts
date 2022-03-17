@@ -13,9 +13,9 @@ export type PathProps = Omit<ComponentProps<PathComponent>, 'd'>;
 
 export const Viewbox = (endCorner: [number, number], startCorner: [number, number] = [0, 0]) =>
 	[...startCorner, ...endCorner].join(' ');
-export const curve = (c1: Vector, c2: Vector, to: Vector) => {
+export const curve = (c1: Vector, c2: Vector, to: Vector, relative = false) => {
 	'worklet';
-	return `C ${c1.x} ${c1.y} ${c2.x} ${c2.y} ${to.x} ${to.y}`;
+	return `${relative ? 'c' : 'C'} ${(c1.x)} ${(c1.y)} ${(c2.x)} ${(c2.y)} ${(to.x)} ${(to.y)}`;
 };
 
 type MaybeRelativeVector<T = number> = Vector<T> &

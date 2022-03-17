@@ -1,6 +1,7 @@
 import React from 'react';
 import Animated, { useAnimatedProps, useDerivedValue, withSpring } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
+// import Circle from './Circle';
 import type { Color } from '~/utils/color';
 import { rgba } from '~/utils/color';
 
