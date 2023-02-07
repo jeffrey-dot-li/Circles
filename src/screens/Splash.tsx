@@ -3,6 +3,7 @@ import React, { Ref, useCallback, useEffect, useMemo, useRef, useState } from 'r
 import {
 	Dimensions,
 	StyleSheet,
+	Text,
 	View,
 } from 'react-native';
 import {
@@ -21,6 +22,9 @@ import AddBubbleButton from '~/components/FloatingActionButton/AddBubbleButton';
 import PocketButton from '~/components/FloatingActionButton/PocketButton';
 import { FAB_OFFSETS } from '~/components/FloatingActionButton/FloatingActionButton';
 import GlobalStyles from '~/static/styles';
+import { SkiaCanvas } from '~/components/Skia/Canvas';
+import RippleButton from '~/components/RippleButton/RippleButton';
+import { themeColors } from '~/static/theme';
 
 type ItemDetailsRouteProp = RouteProp<StackParamList, 'Home'>;
 interface NavigationProps {
@@ -41,9 +45,10 @@ const BubblesScreen = ({ navigation, route }: Props) => {
 	const insets = useSafeAreaInsets();
 	return (
 		<SafeAreaView style={GlobalStyles.screenContainer}>
-			<GradientBackground>
+			<SkiaCanvas />
+			{/* <GradientBackground>
 				<LavaLamp />
-			</GradientBackground>
+			</GradientBackground> */}
 			{bubbles.map(([id, item]) => (
 				<Bubble circleData={item} key={id} id={id} globalIsPaused={globalIsPaused} onPress={onPress(id)} />
 			))}

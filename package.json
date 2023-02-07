@@ -8,7 +8,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "lint": "eslint \"**/*.{vue,ts,js,tsx,jsx}\"",
+    "lint": "eslint \"**/*.{vue,ts,js,tsx,jsx}\" --fix",
     "prepare": "husky install"
   },
   "husky": {
@@ -27,6 +27,7 @@
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/stack": "^6.1.1",
     "@reduxjs/toolkit": "^1.8.0",
+    "@shopify/react-native-skia": "0.1.157",
     "@types/color-convert": "^2.0.0",
     "@types/luxon": "^2.3.0",
     "color-convert": "^2.0.1",

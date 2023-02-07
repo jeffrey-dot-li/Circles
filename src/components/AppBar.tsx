@@ -9,7 +9,6 @@ import { useTiming } from 'react-native-redash';
 
 import FontStyles from '~/static/fonts';
 import type { OnPress_f } from '~/types/utils';
-import { PropsWithStyle } from '~/types/utils';
 
 export const TitleTextInput = (props: TextInputProps) =>
 	(<TextInput {...props} style={[styles.title, FontStyles.textBanner]} placeholder="Title" numberOfLines={1}></TextInput>);

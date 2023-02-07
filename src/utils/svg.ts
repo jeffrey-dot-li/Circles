@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react';
 import type { Vector } from 'react-native-redash';
 import { addArc, addCurve, addLine, addQuadraticCurve, close, createPath, serialize, vec } from 'react-native-redash';
-import type { Path as PathComponent } from 'react-native-svg';
+import type { PathProps as BasePathProps, Path as PathComponent } from 'react-native-svg';
 
 export interface Curve {
 	to: Vector
@@ -9,13 +9,13 @@ export interface Curve {
 	c2: Vector
 }
 
-export type PathProps = Omit<ComponentProps<PathComponent>, 'd'>;
+export type PathProps = Omit<BasePathProps, 'd'>;
 
 export const Viewbox = (endCorner: [number, number], startCorner: [number, number] = [0, 0]) =>
 	[...startCorner, ...endCorner].join(' ');
-export const curve = (c1: Vector, c2: Vector, to: Vector) => {
+export const curve = (c1: Vector, c2: Vector, to: Vector, relative = false) => {
 	'worklet';
-	return `C ${c1.x} ${c1.y} ${c2.x} ${c2.y} ${to.x} ${to.y}`;
+	return `${relative ? 'c' : 'C'} ${(c1.x)} ${(c1.y)} ${(c2.x)} ${(c2.y)} ${(to.x)} ${(to.y)}`;
 };
 
 type MaybeRelativeVector<T = number> = Vector<T> &

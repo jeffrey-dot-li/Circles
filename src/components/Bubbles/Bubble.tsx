@@ -1,10 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
-import type { GestureResponderEvent } from 'react-native';
 import { Dimensions, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
 import type { Vector } from 'react-native-redash';
 import { mix, withPause } from 'react-native-redash';
-
 import { useVector } from 'react-native-redash/src/Vectors';
 import { Gesture, GestureDetector, State } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
@@ -13,6 +11,7 @@ import * as Haptics from 'expo-haptics';
 import type { CircleData } from '../../types/Circles';
 import type { PropsWithStyle } from '../../types/utils';
 import { generateBounceEngine } from '../../utils/bouncing';
+import Blob from './Blob';
 import { rgba } from '~/utils/color';
 import FontStyles from '~/static/fonts';
 
@@ -25,9 +24,6 @@ const useCopyVector = (v: Vector) => useVector(v.x, v.y);
 
 const styles = StyleSheet.create({
 	touchable: {
-		shadowColor: '#000',
-		shadowOpacity: 0.2,
-		shadowRadius: 10,
 		flexDirection: 'column',
 		justifyContent: 'center',
 		alignContent: 'center',
@@ -35,8 +31,14 @@ const styles = StyleSheet.create({
 			width: 5,
 			height: 5,
 		},
+
 		zIndex: 1,
 		elevation: 3,
+	},
+	blob: {
+		position: 'absolute',
+		zIndex: -1,
+		// pointerEvents: 'none',
 	},
 	title: {
 		alignSelf: 'center',
@@ -141,11 +143,12 @@ export const Bubble = ({ circleData: { radius, color, ...note }, globalIsPaused,
 					style={[
 						styles.touchable,
 						{ width: radius, height: radius, borderRadius: radius },
-						{ backgroundColor: rgba(backgroundColor), borderColor: rgba(color) },
+						// { backgroundColor: rgba(backgroundColor), borderColor: rgba(color) },
 					]}
 				>
 					{note.title ? (<Text style={[styles.title, FontStyles.textBanner, { maxWidth: radius * 0.75 }]} numberOfLines={1}>{note.title}</Text>) : <></>}
 					<Text style={[styles.content, FontStyles.textContent, { maxWidth: radius * 0.8 }]} numberOfLines={3}>{note.content}</Text>
+					<Blob color={color} paused={masterIsPaused} size={radius} style={styles.blob}></Blob>
 				</TouchableOpacity>
 			</Animated.View>
 		</GestureDetector>
