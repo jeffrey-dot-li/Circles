@@ -86,3 +86,8 @@ export const Path_C = (v: Vector) => {
 		},
 	};
 };
+
+export const rotateTransform = (angle: number, origin: Vector) => {
+	'worklet';
+	return `rotate(${angle} ${origin.x} ${origin.y})`;
+};

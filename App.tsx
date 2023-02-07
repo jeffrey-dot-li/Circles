@@ -3,7 +3,7 @@ import 'reflect-metadata';
 
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, LogBox, StyleSheet, View } from 'react-native';
-import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { DatabaseConnectionProvider } from './src/data/connexion';

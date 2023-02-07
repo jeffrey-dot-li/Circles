@@ -4,6 +4,7 @@ import { Easing, useSharedValue, withRepeat, withTiming } from 'react-native-rea
 import { withPause } from 'react-native-redash';
 import SkiaBlob from '../Bubbles/BlobSkia';
 import { themeColors } from '~/static/theme';
+import { Vec } from '~/utils/svg';
 
 const blobPeriod = 2;
 const rotatePeriod = 3;
@@ -24,7 +25,7 @@ export const SkiaCanvas = () => {
 	}, []);
 	return (
 		<Canvas style={{ flex: 1, borderStyle: 'solid', borderWidth: 3 }}>
-			<SkiaBlob color={themeColors.skylight[100]} size={100} progress={progress} />
+			<SkiaBlob color={themeColors.skylight[100]} size={100} progress={progress} origin={Vec(100, 200)}/>
 
 		</Canvas>
 	);
