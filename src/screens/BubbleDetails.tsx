@@ -46,10 +46,7 @@ const BubbleDetails = ({ navigation, route: { params: { id } } }: Props) => {
 		return s !== 'active' ? SaveBubble() : undefined;
 	}, [SaveBubble]);
 
-	useEffect(() => {
-		AppState.addEventListener('change', SaveBubbleAppState);
-		return () => AppState.removeEventListener('change', SaveBubbleAppState);
-	}, [SaveBubbleAppState]);
+	useEffect(() => AppState.addEventListener('change', SaveBubbleAppState).remove, [SaveBubbleAppState]);
 
 	const updateCircleColor
 		= useCallback((color: Color) => circleData ? updateCircle({ color }, id) : null, [updateCircle, id, circleData]);
