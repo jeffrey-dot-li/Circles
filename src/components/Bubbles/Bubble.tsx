@@ -29,12 +29,8 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 		justifyContent: 'center',
 		alignContent: 'center',
-		shadowOffset: {
-			width: 5,
-			height: 5,
-		},
 		zIndex: 1,
-		elevation: 3,
+		elevation: 0,
 	},
 	title: {
 		alignSelf: 'center',

@@ -15,7 +15,7 @@ export const Viewbox = (endCorner: [number, number], startCorner: [number, numbe
 	[...startCorner, ...endCorner].join(' ');
 export const curve = (c1: Vector, c2: Vector, to: Vector, relative = false) => {
 	'worklet';
-	return `${relative ? 'c' : 'C'} ${(c1.x)} ${(c1.y)} ${(c2.x)} ${(c2.y)} ${(to.x)} ${(to.y)}`;
+	return `${relative ? 'c' : 'C'} ${(c1.x).toPrecision(4)} ${(c1.y).toPrecision(4)} ${(c2.x).toPrecision(4)} ${(c2.y).toPrecision(4)} ${(to.x).toPrecision(4)} ${(to.y).toPrecision(4)}`;
 };
 
 type MaybeRelativeVector<T = number> = Vector<T> &

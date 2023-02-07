@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
-import { StyleSheet } from 'react-native';
-import Animated, { Easing, useAnimatedProps, useAnimatedStyle, useSharedValue, withRepeat, withSpring, withTiming } from 'react-native-reanimated';
+import { StyleSheet, Text } from 'react-native';
+import Animated, { Easing, useAnimatedProps, useAnimatedStyle, useDerivedValue, useSharedValue, withRepeat, withSpring, withTiming } from 'react-native-reanimated';
 import { withPause } from 'react-native-redash';
 import Svg, { Path } from 'react-native-svg';
 import GlobalStyles from '~/static/styles';
@@ -29,11 +29,12 @@ const Blob: FunctionalComponent<Props>
 		const blobGenerator = useMemo(() => generateBlobPath(Vec(size, size), size / 2), []);
 
 		const progress = useSharedValue(0);
+		const d = useDerivedValue(() => blobGenerator(Math.sin(progress.value / blobPeriod) * 0.5), [progress]);
 
 		const animatedProps = useAnimatedProps(() => {
 			'worklet';
 			return {
-				// d: blobGenerator(Math.sin(progress.value / blobPeriod) * 0.5),
+				d: d.value,
 			};
 		}, [blobPeriod]);
 
@@ -60,6 +61,7 @@ const Blob: FunctionalComponent<Props>
 				<Svg height={2 * size} width={2 * size} viewBox={Viewbox([2 * size, 2 * size])}>
 					<AnimatedPath fill={rgba(backgroundColor)} stroke={rgba(color)} animatedProps={animatedProps}></AnimatedPath>
 				</Svg>
+				{/* <Text style={{ position: 'absolute', left: '50%', top: '50%' }}>{a.value}</Text> */}
 			</Animated.View>
 		);
 	};
